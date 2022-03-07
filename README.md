@@ -33,3 +33,8 @@ A more detailed explanation can be found below
 | `-o`, `--output_dir` | Path or file name to output the analysis report. If you input a path instead of file name, the file name will be generated automatically based on scope and datetime. | `"/project2/lgrandi/yuanlq/shared/disk_usage/"` | None | True |
 | `-d`, `--deep_scan` | Deeper scan at these folders. | `"[xenonnt, xenon1t, yuanlq]"` | `"[xenonnt, xenon1t]"` | False |
 | `-t`, `--threshold` | Threshold of minimum folder size to be analyzed. | `1TB` | `'None'` | False |
+
+## Examples
+Please find then at
+- Input file: `/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_input_20220306.txt`
+- Output file: `/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_input_20220306.txt`
