@@ -294,6 +294,7 @@ def main():
     parser = ArgumentParser('Disk usage scan')
     parser.add_argument('-t', '--threshold',
                         choices=['None', '1TB', '500GB', '100GB'],
+                        default='None',
                         help='Threshold for folders to show up in rough scan report. Do you want analysis on all folders all just folders with enough size?')
     parser.add_argument('-i', '--input_dir',
                         help='Absolute directory to disk usage scan result text file, will re-scan if not specified.')
@@ -301,9 +302,10 @@ def main():
                         required=True,
                         help='Absolute directory to analysis report file, will assign name automatically if you do not specify the file name.')
     parser.add_argument('-d', '--deep_scan',
+                        default='[xenonnt, xenon1t]',
                         help='A list of folders name to scan deeper and include in the report. eg. "[xenonnt, xenonnt, yuanlq]" OR yuanlq')
     parser.add_argument('-s', '--scan_within',
-                        required=True,
+                        default='/dali/lgrandi',
                         help='Absolute directory to scan. eg. /dali/lgrandi')
     parse_args = parser.parse_args()
     args_dict = vars(parse_args)
