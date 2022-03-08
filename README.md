@@ -1,5 +1,5 @@
 # xeda
-XEnon Disk usage Analysis
+**XEnon Disk usage Analysis**
 
 ## Scope
 Analyze disk usage to see how much each type of data contribute. It does the following
@@ -38,3 +38,17 @@ A more detailed explanation can be found below
 Please find then at
 - Input file: `/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_input_20220306.txt`
 - Output file: `/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_input_20220306.txt`
+
+## Classifcation
+|Class  | Meaning  |
+| :-----------:|:-------------:| 
+| `rawdata` | raw data from DAQ taken by REDAX |
+| `records` | records level strax data, including `raw_records` and `records` for TPC regular channels and high energy channels, MV, NV and also acquisition monitor |
+| `peaks` | peaks level strax data, including `peaklets`, `lone_hits`, `peaks` |
+| `root` | `.root` data, typically are 1T-era minitrees and GEANT4 output |
+| `pickle` | Usually user-defined data, including `.pkl`, `.npz`, `npy` and `.csv` |
+| `hdf` | Usually user-defined heavy data, including `.hdf` and `.h5` |
+| `jobs` | Job submission related, including `.txt`, `.log` and `.sh` |
+| `figures` | Human-readable figures including `.png`, `.jpg`, `.jpeg` |
+| `zips` | Zip files including `.zip` or `.gz` |
+| `others` | Other data type not classifed into any of them. Usually dominated by user-defined strax data |
