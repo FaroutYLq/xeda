@@ -98,7 +98,10 @@ class DUAnalyzer():
         # remove non-ascii
         mask_ascii = np.ones(len(paths), dtype='bool')
         for i in range(len(paths)-1):
-            mask_ascii[i] = sizes_kb[i].isascii() and paths[i].isascii()
+            if type(sizes_kb[i]) == int:
+                mask_ascii[i] = paths[i].isascii()
+            else:
+                mask_ascii[i] = sizes_kb[i].isascii() and paths[i].isascii()
             
         sizes_kb = sizes_kb[mask_ascii]
         paths = paths[mask_ascii]
@@ -131,7 +134,7 @@ class DUAnalyzer():
 
         for i,p in tqdm(enumerate(paths)):
             splits = p.split('/')
-            if splits[0] != 'dali' and splits[1] != 'project2': # in case you scaned using relative path...
+            if splits[0] != 'dali' and splits[0] != 'project2': # in case you scaned using relative path...
                 splits = splits[depth-2:]
             else:
                 splits = splits[depth-1:]
