@@ -46,7 +46,7 @@ Please find then at
 | `records` | records level strax data, including `raw_records` and `records` for TPC regular channels and high energy channels, MV, NV and also acquisition monitor |
 | `peaks` | peaks level strax data, including `peaklets`, `lone_hits`, `peaks` |
 | `root` | `.root` data, typically are 1T-era minitrees and GEANT4 output |
-| `pickle` | Usually user-defined data, including `.pkl`, `.npz`, `npy` and `.csv` |
+| `pickle` | Usually user-defined data, including `.pickles`, `.pkl`, `.npz`, `npy` and `.csv` |
 | `hdf` | Usually user-defined heavy data, including `.hdf` and `.h5` |
 | `jobs` | Job submission related, including `.txt`, `.log` and `.sh` |
 | `figures` | Human-readable figures including `.png`, `.jpg`, `.jpeg` |
