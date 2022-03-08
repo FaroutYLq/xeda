@@ -17,7 +17,7 @@ For typical usage, please check the examples below:
 If you just want to have a scan at `/dali/lgrandi` and put the report at `/project2/lgrandi/yuanlq/shared/disk_usage/`:
 
 ```
-python storage_scan.py -t 500GB -o "/project2/lgrandi/yuanlq/shared/disk_usage/" -d "[xenonnt, xenon1t]" -s "/dali/lgrandi"
+python xeda.py -t 500GB -o "/project2/lgrandi/yuanlq/shared/disk_usage/" -d "[xenonnt, xenon1t]" -s "/dali/lgrandi"
 ```
 
 - `-t` means threshold in data size to show in report. Here we picked 500GB. Only users who used more than 500GB will be shown analysis in report.
