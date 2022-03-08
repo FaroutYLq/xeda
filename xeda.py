@@ -274,16 +274,16 @@ class DUAnalyzer():
 
         with open(self.output_dir, 'a') as f:
             f.write('Summary:'+'\n')
-            f.write('    '+'rawdata: '+str(np.around(parent_analysis['rawdata_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['rawdata_tb'].sum()/total_scanned_tb, decimals=2))+'%')
-            f.write('    '+'records: '+str(np.around(parent_analysis['records_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['records_tb'].sum()/total_scanned_tb, decimals=2))+'%')
-            f.write('    '+'peaks  : '+str(np.around(parent_analysis['peaks_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['peaks_tb'].sum()/total_scanned_tb, decimals=2))+'%')
-            f.write('    '+'root   : '+str(np.around(parent_analysis['root_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['root_tb'].sum()/total_scanned_tb, decimals=2))+'%')
-            f.write('    '+'pickle : '+str(np.around(parent_analysis['pickle_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['pickle_tb'].sum()/total_scanned_tb, decimals=2))+'%')
-            f.write('    '+'jobs   : '+str(np.around(parent_analysis['jobs_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['jobs_tb'].sum()/total_scanned_tb, decimals=2))+'%')
-            f.write('    '+'figures: '+str(np.around(parent_analysis['figures_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['figures_tb'].sum()/total_scanned_tb, decimals=2))+'%')
-            f.write('    '+'zips   : '+str(np.around(parent_analysis['zips_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['zips_tb'].sum()/total_scanned_tb, decimals=2))+'%')
-            f.write('    '+'hdf    : '+str(np.around(parent_analysis['hdf_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['hdf_tb'].sum()/total_scanned_tb, decimals=2))+'%')
-            f.write('    '+'others : '+str(np.around(parent_analysis['others_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['others_tb'].sum()/total_scanned_tb, decimals=2))+'%')
+            f.write('    '+'rawdata: '+str(np.around(parent_analysis['rawdata_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['rawdata_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
+            f.write('    '+'records: '+str(np.around(parent_analysis['records_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['records_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
+            f.write('    '+'peaks  : '+str(np.around(parent_analysis['peaks_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['peaks_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
+            f.write('    '+'root   : '+str(np.around(parent_analysis['root_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['root_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
+            f.write('    '+'pickle : '+str(np.around(parent_analysis['pickle_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['pickle_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
+            f.write('    '+'jobs   : '+str(np.around(parent_analysis['jobs_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['jobs_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
+            f.write('    '+'figures: '+str(np.around(parent_analysis['figures_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['figures_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
+            f.write('    '+'zips   : '+str(np.around(parent_analysis['zips_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['zips_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
+            f.write('    '+'hdf    : '+str(np.around(parent_analysis['hdf_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['hdf_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
+            f.write('    '+'others : '+str(np.around(parent_analysis['others_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['others_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
         
         return parent_analysis
 
