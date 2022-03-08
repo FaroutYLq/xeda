@@ -44,7 +44,7 @@ class DUAnalyzer():
             for parent in deep_scan:
                 print('\nDeep scanning %s\n'%(parent))
                 with open(self.output_dir, 'a') as f:
-                    f.write('Deeper scan for %s'%(parent))
+                    f.write('Deeper scan for %s \n'%(parent))
                 ss = sizes_kb[parents==parent]
                 ps = paths[parents==parent]
                 sw = scan_within + parent + '/'
@@ -58,7 +58,7 @@ class DUAnalyzer():
             parent = deep_scan
             print('\nDeep scanning %s \n'%(parent))
             with open(self.output_dir, 'a') as f:
-                f.write('Deeper scan for %s'%(parent))
+                f.write('Deeper scan for %s \n'%(parent))
             ss = sizes_kb[parents==parent]
             ps = paths[parents==parent]
             sw = scan_within + parent + '/'
@@ -150,7 +150,7 @@ class DUAnalyzer():
                 types.append('peaks')
             elif '.root' in last:
                 types.append('root')
-            elif ('.pkl' in last) or ('.npz' in last) or ('.npy' in last) or ('.csv' in last):
+            elif ('pickles' in last) or ('.pkl' in last) or ('.npz' in last) or ('.npy' in last) or ('.csv' in last):
                 types.append('pickle')
             elif ('.hdf' in last) or  ('.h5' in last):
                 types.append('hdf')
@@ -284,7 +284,7 @@ class DUAnalyzer():
             f.write('    '+'zips   : '+str(np.around(parent_analysis['zips_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['zips_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
             f.write('    '+'hdf    : '+str(np.around(parent_analysis['hdf_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['hdf_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
             f.write('    '+'others : '+str(np.around(parent_analysis['others_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['others_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
-        
+            f.write('==============\n')
         return parent_analysis
 
 def main():
