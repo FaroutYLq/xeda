@@ -119,7 +119,6 @@ class DUAnalyzer():
         
         return sizes_kb, paths, total_size_kb
 
-
     def determine_attributes(self, paths, scan_within):
         gc.collect()
         if scan_within != self.scan_within:
@@ -183,7 +182,10 @@ class DUAnalyzer():
         analysis_dtype = np.dtype([('name', '<U4'), ('total_tb', float), ('rawdata_tb', float),
                                    ('records_tb', float), ('peaks_tb', float), ('root_tb', float), 
                                    ('pickle_tb', float), ('jobs_tb', float), ('figures_tb', float), 
-                                   ('zips_tb', float), ('hdf_tb', float), ('others_tb', float)])
+                                   ('zips_tb', float), ('hdf_tb', float), ('others_tb', float),
+                                   ('rawdata_n', int), ('records_n', int), ('peaks_n', int),
+                                   ('root_n', int), ('pickle_n', int), ('jobs_n', int), ('figures_n', int),
+                                   ('zips_n', int), ('hdf_n', int)])
         parent_analysis = np.zeros(len(parent_sizes), dtype=analysis_dtype)
         
         for i in tqdm(range(len(parent_sizes))):
@@ -194,6 +196,7 @@ class DUAnalyzer():
             parent_analysis[i]['total_tb'] = total
 
             for cat in CATEGORIES:
+                parent_analysis[i][cat+"_n"] = np.sum((parents==parent_names[i])&(types==cat))
                 exec('%s = np.sum(sizes_kb[(parents==parent_names[i])&(types=="%s")])/1024**3'%(cat, cat))
                 others -= eval(cat)
                 parent_analysis[i][cat+'_tb'] = eval(cat)
@@ -202,23 +205,23 @@ class DUAnalyzer():
             
             if total > threshold:
                 with open(self.output_dir, 'a') as f:
-                    f.write(str(parent_names[i])+': '+str(np.around(total, decimals=2))+' TB\n')
+                    f.write(str(parent_names[i])+': '+str(np.around(total, decimals=3))+' TB\n')
                     for cat in CATEGORIES:
-                        f.write('    '+cat+': '+str(np.around(eval(cat), decimals=2))+' TB'+'  '+str(np.around(100*eval(cat)/total, decimals=2))+'%\n')
-                    f.write('    '+'others: '+str(np.around(others, decimals=2))+' TB'+'  '+str(np.around(100*others/total, decimals=2))+'%\n')
+                        f.write('    '+cat+': '+str(np.around(eval(cat), decimals=3))+' TB'+'  '+str(np.around(100*eval(cat)/total, decimals=3))+'%  '+str(parent_analysis[i][cat+"_n"])+'\n')
+                    f.write('    '+'others: '+str(np.around(others, decimals=3))+' TB'+'  '+str(np.around(100*others/total, decimals=3))+'%\n')
                     f.write('--------------\n')
                 
                 if print_result:
-                    print(parent_names[i], np.around(total, decimals=2), 'TB')
+                    print(parent_names[i], np.around(total, decimals=3), 'TB')
                     for cat in CATEGORIES:
-                        print('    ', cat+': ', np.around(eval(cat), decimals=2), 'TB', '  ', np.around(100*eval(cat)/total, decimals=2),'%')
-                    print('    ', 'others : ', np.around(others, decimals=2), 'TB', '  ', np.around(100*others/total, decimals=2),'%')
+                        print('    ', cat+': ', np.around(eval(cat), decimals=3), 'TB', '  ', np.around(100*eval(cat)/total, decimals=3),'%  '+str(parent_analysis[i][cat+"_n"]))
+                    print('    ', 'others : ', np.around(others, decimals=3), 'TB', '  ', np.around(100*others/total, decimals=3),'%')
                     print('--------------\n')
             else:
                 with open(self.output_dir, 'a') as f:
-                    f.write(str(parent_names[i])+': '+str(np.around(total, decimals=2))+' TB\n')
+                    f.write(str(parent_names[i])+': '+str(np.around(total, decimals=3))+' TB\n')
                 if print_result:
-                    print(parent_names[i], np.around(total, decimals=2), 'TB')
+                    print(parent_names[i], np.around(total, decimals=3), 'TB')
         with open(self.output_dir, 'a') as f:
             f.write('--------------\n')
             f.write('\n')
@@ -231,17 +234,17 @@ class DUAnalyzer():
             total_scanned_tb += parent_analysis[cat+'_tb'].sum()
 
         if print_result:
-            print('Total storage scanned: %s TB'%(np.round(total_scanned_tb, decimals=2)))
+            print('Total storage scanned: %s TB'%(np.round(total_scanned_tb, decimals=3)))
             for cat in CATEGORIES:
-                print('    ', cat+' : ', np.around(parent_analysis[cat+'_tb'].sum(), decimals=2), 'TB', '  ', np.around(100*parent_analysis[cat+'_tb'].sum()/total_scanned_tb, decimals=2),'%')
-            print('    ', 'others : ', np.around(parent_analysis['others_tb'].sum(), decimals=2), 'TB', '  ', np.around(100*parent_analysis['others_tb'].sum()/total_scanned_tb, decimals=2),'%')
+                print('    ', cat+' : ', np.around(parent_analysis[cat+'_tb'].sum(), decimals=3), 'TB', '  ', np.around(100*parent_analysis[cat+'_tb'].sum()/total_scanned_tb, decimals=3),'%  '+str(parent_analysis[cat+"_n"].sum()))
+            print('    ', 'others : ', np.around(parent_analysis['others_tb'].sum(), decimals=3), 'TB', '  ', np.around(100*parent_analysis['others_tb'].sum()/total_scanned_tb, decimals=3),'%')
 
         with open(self.output_dir, 'a') as f:
             f.write('Summary:'+'\n')
-            f.write('Total storage scanned: %s TB \n'%(np.round(total_scanned_tb, decimals=2)))
+            f.write('Total storage scanned: %s TB \n'%(np.round(total_scanned_tb, decimals=3)))
             for cat in CATEGORIES:
-                f.write('    '+cat+' : '+str(np.around(parent_analysis[cat+'_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis[cat+'_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
-            f.write('    '+'others : '+str(np.around(parent_analysis['others_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['others_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
+                f.write('    '+cat+' : '+str(np.around(parent_analysis[cat+'_tb'].sum(), decimals=3))+'TB'+'  '+str(np.around(100*parent_analysis[cat+'_tb'].sum()/total_scanned_tb, decimals=3))+'%  '+str(parent_analysis[cat+"_n"].sum())+'\n')
+            f.write('    '+'others : '+str(np.around(parent_analysis['others_tb'].sum(), decimals=3))+'TB'+'  '+str(np.around(100*parent_analysis['others_tb'].sum()/total_scanned_tb, decimals=3))+'%\n')
             f.write('==============\n')
         return parent_analysis
 
