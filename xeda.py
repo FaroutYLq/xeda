@@ -13,6 +13,9 @@ import os
 #import utilix
 #from utilix.batchq import *
 
+CATEGORIES = ['rawdata', 'records', 'peaks', 'root', 'pickle', 'jobs', 'figures',
+              'zips', 'hdf']
+
 
 class DUAnalyzer():
     def __init__(self, scan_within, input_dir, output_dir, threshold, deep_scan, print_result=True):
@@ -185,56 +188,30 @@ class DUAnalyzer():
         
         for i in tqdm(range(len(parent_sizes))):
             total = parent_sizes[i]/1024**3
-            rawdata = np.sum(sizes_kb[(parents==parent_names[i])&(types=='rawdata')])/1024**3
-            records = np.sum(sizes_kb[(parents==parent_names[i])&(types=='records')])/1024**3
-            peaks = np.sum(sizes_kb[(parents==parent_names[i])&(types=='peaks')])/1024**3
-            root = np.sum(sizes_kb[(parents==parent_names[i])&(types=='root')])/1024**3
-            pickle = np.sum(sizes_kb[(parents==parent_names[i])&(types=='pickle')])/1024**3
-            jobs = np.sum(sizes_kb[(parents==parent_names[i])&(types=='jobs')])/1024**3
-            figures = np.sum(sizes_kb[(parents==parent_names[i])&(types=='figures')])/1024**3
-            zips = np.sum(sizes_kb[(parents==parent_names[i])&(types=='zips')])/1024**3
-            hdf = np.sum(sizes_kb[(parents==parent_names[i])&(types=='hdf')])/1024**3
-            others = total - rawdata - records - peaks - root - pickle - jobs - figures - zips - hdf
-            
+            others = total
+
             parent_analysis[i]['name'] = parent_names[i]
             parent_analysis[i]['total_tb'] = total
-            parent_analysis[i]['rawdata_tb'] = rawdata
-            parent_analysis[i]['records_tb'] = records
-            parent_analysis[i]['peaks_tb'] = peaks
-            parent_analysis[i]['root_tb'] = root
-            parent_analysis[i]['pickle_tb'] = pickle
-            parent_analysis[i]['jobs_tb'] = jobs
-            parent_analysis[i]['figures_tb'] = figures
-            parent_analysis[i]['zips_tb'] = zips
-            parent_analysis[i]['hdf_tb'] = hdf
+
+            for cat in CATEGORIES:
+                exec('%s = np.sum(sizes_kb[(parents==parent_names[i])&(types=="%s")])/1024**3'%(cat, cat))
+                others -= eval(cat)
+                parent_analysis[i][cat+'_tb'] = eval(cat)
+
             parent_analysis[i]['others_tb'] = others
             
             if total > threshold:
                 with open(self.output_dir, 'a') as f:
                     f.write(str(parent_names[i])+': '+str(np.around(total, decimals=2))+' TB\n')
-                    f.write('    '+'rawdata: '+str(np.around(rawdata, decimals=2))+' TB'+'  '+str(np.around(100*rawdata/total, decimals=2))+'%\n')
-                    f.write('    '+'records: '+str(np.around(records, decimals=2))+' TB'+'  '+str(np.around(100*records/total, decimals=2))+'%\n')
-                    f.write('    '+'peaks  : '+str(np.around(peaks, decimals=2))+' TB'+'  '+str(np.around(100*peaks/total, decimals=2))+'%\n')
-                    f.write('    '+'root   : '+str(np.around(root, decimals=2))+' TB'+'  '+str(np.around(100*root/total, decimals=2))+'%\n')
-                    f.write('    '+'pickle : '+str(np.around(pickle, decimals=2))+' TB'+'  '+str(np.around(100*pickle/total, decimals=2))+'%\n')
-                    f.write('    '+'jobs   : '+str(np.around(jobs, decimals=2))+' TB'+'  '+str(np.around(100*jobs/total, decimals=2))+'%\n')
-                    f.write('    '+'figures: '+str(np.around(figures, decimals=2))+' TB'+'  '+str(np.around(100*figures/total, decimals=2))+'%\n')
-                    f.write('    '+'zips   : '+str(np.around(zips, decimals=2))+' TB'+'  '+str(np.around(100*zips/total, decimals=2))+'%\n')
-                    f.write('    '+'hdf    : '+str(np.around(hdf, decimals=2))+' TB'+'  '+str(np.around(100*hdf/total, decimals=2))+'%\n')
+                    for cat in CATEGORIES:
+                        f.write('    '+cat+': '+str(np.around(eval(cat), decimals=2))+' TB'+'  '+str(np.around(100*eval(cat)/total, decimals=2))+'%\n')
                     f.write('    '+'others: '+str(np.around(others, decimals=2))+' TB'+'  '+str(np.around(100*others/total, decimals=2))+'%\n')
                     f.write('--------------\n')
                 
                 if print_result:
                     print(parent_names[i], np.around(total, decimals=2), 'TB')
-                    print('    ', 'rawdata: ', np.around(rawdata, decimals=2), 'TB', '  ', np.around(100*rawdata/total, decimals=2),'%')
-                    print('    ', 'records: ', np.around(records, decimals=2), 'TB', '  ', np.around(100*records/total, decimals=2),'%')
-                    print('    ', 'peaks  : ', np.around(peaks, decimals=2), 'TB', '  ', np.around(100*peaks/total, decimals=2),'%')
-                    print('    ', 'root   : ', np.around(root, decimals=2), 'TB', '  ', np.around(100*root/total, decimals=2),'%')
-                    print('    ', 'pickle : ', np.around(pickle, decimals=2), 'TB', '  ', np.around(100*pickle/total, decimals=2),'%')
-                    print('    ', 'jobs   : ', np.around(jobs, decimals=2), 'TB', '  ', np.around(100*jobs/total, decimals=2),'%')
-                    print('    ', 'figures: ', np.around(figures, decimals=2), 'TB', '  ', np.around(100*figures/total, decimals=2),'%')
-                    print('    ', 'zips   : ', np.around(zips, decimals=2), 'TB', '  ', np.around(100*zips/total, decimals=2),'%')
-                    print('    ', 'hdf    : ', np.around(hdf, decimals=2), 'TB', '  ', np.around(100*hdf/total, decimals=2),'%')
+                    for cat in CATEGORIES:
+                        print('    ', cat+': ', np.around(eval(cat), decimals=2), 'TB', '  ', np.around(100*eval(cat)/total, decimals=2),'%')
                     print('    ', 'others : ', np.around(others, decimals=2), 'TB', '  ', np.around(100*others/total, decimals=2),'%')
                     print('--------------\n')
             else:
@@ -249,40 +226,21 @@ class DUAnalyzer():
             print('--------------\n')
 
         # Overview
-        total_scanned_tb = (parent_analysis['rawdata_tb'].sum()+
-                            parent_analysis['records_tb'].sum()+
-                            parent_analysis['peaks_tb'].sum()+
-                            parent_analysis['root_tb'].sum()+
-                            parent_analysis['pickle_tb'].sum()+
-                            parent_analysis['jobs_tb'].sum()+
-                            parent_analysis['figures_tb'].sum()+
-                            parent_analysis['zips_tb'].sum()+
-                            parent_analysis['hdf_tb'].sum()+
-                            parent_analysis['others_tb'].sum())
+        total_scanned_tb = parent_analysis['others_tb'].sum()
+        for cat in CATEGORIES:
+            total_scanned_tb += parent_analysis[cat+'_tb'].sum()
+
         if print_result:
             print('Total storage scanned: %s TB'%(np.round(total_scanned_tb, decimals=2)))
-            print('    ', 'rawdata: ', np.around(parent_analysis['rawdata_tb'].sum(), decimals=2), 'TB', '  ', np.around(100*parent_analysis['rawdata_tb'].sum()/total_scanned_tb, decimals=2),'%')
-            print('    ', 'records: ', np.around(parent_analysis['records_tb'].sum(), decimals=2), 'TB', '  ', np.around(100*parent_analysis['records_tb'].sum()/total_scanned_tb, decimals=2),'%')
-            print('    ', 'peaks  : ', np.around(parent_analysis['peaks_tb'].sum(), decimals=2), 'TB', '  ', np.around(100*parent_analysis['peaks_tb'].sum()/total_scanned_tb, decimals=2),'%')
-            print('    ', 'root   : ', np.around(parent_analysis['root_tb'].sum(), decimals=2), 'TB', '  ', np.around(100*parent_analysis['root_tb'].sum()/total_scanned_tb, decimals=2),'%')
-            print('    ', 'pickle : ', np.around(parent_analysis['pickle_tb'].sum(), decimals=2), 'TB', '  ', np.around(100*parent_analysis['pickle_tb'].sum()/total_scanned_tb, decimals=2),'%')
-            print('    ', 'jobs   : ', np.around(parent_analysis['jobs_tb'].sum(), decimals=2), 'TB', '  ', np.around(100*parent_analysis['jobs_tb'].sum()/total_scanned_tb, decimals=2),'%')
-            print('    ', 'figures: ', np.around(parent_analysis['figures_tb'].sum(), decimals=2), 'TB', '  ', np.around(100*parent_analysis['figures_tb'].sum()/total_scanned_tb, decimals=2),'%')
-            print('    ', 'zips   : ', np.around(parent_analysis['zips_tb'].sum(), decimals=2), 'TB', '  ', np.around(100*parent_analysis['zips_tb'].sum()/total_scanned_tb, decimals=2),'%')
-            print('    ', 'hdf    : ', np.around(parent_analysis['hdf_tb'].sum(), decimals=2), 'TB', '  ', np.around(100*parent_analysis['hdf_tb'].sum()/total_scanned_tb, decimals=2),'%')
+            for cat in CATEGORIES:
+                print('    ', cat+' : ', np.around(parent_analysis[cat+'_tb'].sum(), decimals=2), 'TB', '  ', np.around(100*parent_analysis[cat+'_tb'].sum()/total_scanned_tb, decimals=2),'%')
             print('    ', 'others : ', np.around(parent_analysis['others_tb'].sum(), decimals=2), 'TB', '  ', np.around(100*parent_analysis['others_tb'].sum()/total_scanned_tb, decimals=2),'%')
 
         with open(self.output_dir, 'a') as f:
             f.write('Summary:'+'\n')
-            f.write('    '+'rawdata: '+str(np.around(parent_analysis['rawdata_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['rawdata_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
-            f.write('    '+'records: '+str(np.around(parent_analysis['records_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['records_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
-            f.write('    '+'peaks  : '+str(np.around(parent_analysis['peaks_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['peaks_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
-            f.write('    '+'root   : '+str(np.around(parent_analysis['root_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['root_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
-            f.write('    '+'pickle : '+str(np.around(parent_analysis['pickle_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['pickle_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
-            f.write('    '+'jobs   : '+str(np.around(parent_analysis['jobs_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['jobs_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
-            f.write('    '+'figures: '+str(np.around(parent_analysis['figures_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['figures_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
-            f.write('    '+'zips   : '+str(np.around(parent_analysis['zips_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['zips_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
-            f.write('    '+'hdf    : '+str(np.around(parent_analysis['hdf_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['hdf_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
+            f.write('Total storage scanned: %s TB \n'%(np.round(total_scanned_tb, decimals=2)))
+            for cat in CATEGORIES:
+                f.write('    '+cat+' : '+str(np.around(parent_analysis[cat+'_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis[cat+'_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
             f.write('    '+'others : '+str(np.around(parent_analysis['others_tb'].sum(), decimals=2))+'TB'+'  '+str(np.around(100*parent_analysis['others_tb'].sum()/total_scanned_tb, decimals=2))+'%\n')
             f.write('==============\n')
         return parent_analysis
