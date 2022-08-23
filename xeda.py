@@ -249,7 +249,7 @@ class DUAnalyzer:
         gc.collect()
         analysis_dtype = np.dtype(
             [
-                ("name", "<U4"),
+                ("name", "<U64"),
                 ("total_tb", float),
                 ("total_n", int),
                 ("rawdata_tb", float),
