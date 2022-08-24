@@ -131,14 +131,27 @@ def manage_arguements(args_dict, verbose=False):
 
 
 def determine_threshold(threshold):
-    if threshold == "1TB":
-        return 1
-    elif threshold == "500GB":
-        return 0.5
-    elif threshold == "100GB":
-        return 0.1
-    elif threshold == "None" or threshold == None:
-        return 0
+    """Transform the input string to float for size in unit of TB.
+
+    Args:
+        threshold (str): Input size threshold.
+
+    Returns:
+        size_thr_tb (float): size threshold in unit of TB.
+    """
+    unit = threshold[-2:]
+    number = threshold[:-2]
+
+    if unit == "TB":
+        coeff = 1
+    elif unit == "GB":
+        coeff = 1 / 1000
+    elif unit == "KB":
+        coeff = 1 / 1000000
+    else:
+        raise ValueError("Not supporting unit: %s" % (unit))
+
+    return coeff * number
 
 
 def make_filename(scan_within="/dali/lgrandi/", filetype="input"):
