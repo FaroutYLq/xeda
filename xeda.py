@@ -83,7 +83,6 @@ class DUAnalyzer:
                     f.write("--------------\n")
         else:
             parent = deep_scan
-            print("\nDeep scanning %s \n" % (parent))
             with open(self.output_dir, "a") as f:
                 f.write("Deeper scan for %s \n" % (parent))
             ss = sizes_kb[parents == parent]
@@ -174,7 +173,7 @@ class DUAnalyzer:
         for i, p in tqdm(enumerate(paths)):
             splits = p.split("/")
             if (
-                splits[0] != "dali" and splits[0] != "project2"
+                splits[0] != "dali" and splits[0] != "project2" and splits[0] != "home"
             ):  # in case you scaned using relative path...
                 splits = splits[depth - 2 :]
             else:
