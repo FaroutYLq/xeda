@@ -37,9 +37,9 @@ class DUAnalyzer:
         deep_scan,
         print_result=True,
     ):
-        if scan_within[-1] != '/':
-            scan_within += '/'
-            
+        if scan_within[-1] != "/":
+            scan_within += "/"
+
         self.scan_within = scan_within
         self.input_dir = input_dir
         self.output_dir = output_dir
@@ -284,9 +284,7 @@ class DUAnalyzer:
 
             for cat in CATEGORIES:
                 # count files
-                count = np.sum(
-                    (parents == parent_names[i]) & (types == cat)
-                )
+                count = np.sum((parents == parent_names[i]) & (types == cat))
                 parent_analysis[i][cat + "_n"] = count
                 parent_analysis[i]["total_n"] += count
 
@@ -308,7 +306,7 @@ class DUAnalyzer:
                         + ": "
                         + str(np.around(total, decimals=3))
                         + " TB; "
-                        + "%s files.\n"%(parent_analysis[i]["total_n"])
+                        + "%s files.\n" % (parent_analysis[i]["total_n"])
                     )
                     for cat in CATEGORIES:
                         f.write(
@@ -363,7 +361,7 @@ class DUAnalyzer:
                         + ": "
                         + str(np.around(total, decimals=3))
                         + " TB; "
-                        + "%s files.\n"%(parent_analysis[i]["total_n"])
+                        + "%s files.\n" % (parent_analysis[i]["total_n"])
                     )
                 if print_result:
                     print(parent_names[i], np.around(total, decimals=3), "TB")
@@ -448,7 +446,7 @@ class DUAnalyzer:
                 + "%\n"
             )
             f.write("==============\n")
-        np.save(self.output_dir.replace('.txt', '.npy'), parent_analysis)
+        np.save(self.output_dir.replace(".txt", ".npy"), parent_analysis)
         return parent_analysis
 
 
