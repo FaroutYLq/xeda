@@ -37,6 +37,9 @@ class DUAnalyzer:
         deep_scan,
         print_result=True,
     ):
+        if scan_within[-1] != '/':
+            scan_within += '/'
+            
         self.scan_within = scan_within
         self.input_dir = input_dir
         self.output_dir = output_dir
@@ -61,6 +64,8 @@ class DUAnalyzer:
             os.remove(self.output_dir)
             print("Removed")
 
+        # deep scan related
+        print("\nDeep scan started... it may take ~10 mins.\n")
         if type(deep_scan) == list:
             for parent in deep_scan:
                 print("\nDeep scanning %s\n" % (parent))
@@ -71,14 +76,13 @@ class DUAnalyzer:
                 sw = scan_within + parent + "/"
                 ds, pts, ts = self.determine_attributes(ps, sw)
                 pns, pss = self.parent_rank(ss[:-1], ds, pts)
-                _ = self.types_by_parent(
+                analysis = self.types_by_parent(
                     ss[:-1], ds, pts, pss, pns, ts, print_result=self.print_result
                 )
                 with open(self.output_dir, "a") as f:
                     f.write("--------------\n")
         else:
             parent = deep_scan
-            print("\nDeep scanning %s \n" % (parent))
             with open(self.output_dir, "a") as f:
                 f.write("Deeper scan for %s \n" % (parent))
             ss = sizes_kb[parents == parent]
@@ -169,7 +173,7 @@ class DUAnalyzer:
         for i, p in tqdm(enumerate(paths)):
             splits = p.split("/")
             if (
-                splits[0] != "dali" and splits[0] != "project2"
+                splits[0] != "dali" and splits[0] != "project2" and splits[0] != "home"
             ):  # in case you scaned using relative path...
                 splits = splits[depth - 2 :]
             else:
@@ -244,8 +248,9 @@ class DUAnalyzer:
         gc.collect()
         analysis_dtype = np.dtype(
             [
-                ("name", "<U4"),
+                ("name", "<U64"),
                 ("total_tb", float),
+                ("total_n", int),
                 ("rawdata_tb", float),
                 ("records_tb", float),
                 ("peaks_tb", float),
@@ -275,11 +280,17 @@ class DUAnalyzer:
 
             parent_analysis[i]["name"] = parent_names[i]
             parent_analysis[i]["total_tb"] = total
+            parent_analysis[i]["total_n"] = 0
 
             for cat in CATEGORIES:
-                parent_analysis[i][cat + "_n"] = np.sum(
+                # count files
+                count = np.sum(
                     (parents == parent_names[i]) & (types == cat)
                 )
+                parent_analysis[i][cat + "_n"] = count
+                parent_analysis[i]["total_n"] += count
+
+                # compute disk usage in unit of TB
                 exec(
                     '%s = np.sum(sizes_kb[(parents==parent_names[i])&(types=="%s")])/1024**3'
                     % (cat, cat)
@@ -289,13 +300,15 @@ class DUAnalyzer:
 
             parent_analysis[i]["others_tb"] = others
 
+            # Write output files if folder has size above threshold
             if total > threshold:
                 with open(self.output_dir, "a") as f:
                     f.write(
                         str(parent_names[i])
                         + ": "
                         + str(np.around(total, decimals=3))
-                        + " TB\n"
+                        + " TB; "
+                        + "%s files.\n"%(parent_analysis[i]["total_n"])
                     )
                     for cat in CATEGORIES:
                         f.write(
@@ -349,7 +362,8 @@ class DUAnalyzer:
                         str(parent_names[i])
                         + ": "
                         + str(np.around(total, decimals=3))
-                        + " TB\n"
+                        + " TB; "
+                        + "%s files.\n"%(parent_analysis[i]["total_n"])
                     )
                 if print_result:
                     print(parent_names[i], np.around(total, decimals=3), "TB")
@@ -434,6 +448,7 @@ class DUAnalyzer:
                 + "%\n"
             )
             f.write("==============\n")
+        np.save(self.output_dir.replace('.txt', '.npy'), parent_analysis)
         return parent_analysis
 
 
@@ -472,7 +487,7 @@ def main():
     parser.add_argument(
         "-s",
         "--scan_within",
-        default="/dali/lgrandi",
+        default="/dali/lgrandi/",
         help="Absolute directory to scan. eg. /dali/lgrandi",
     )
     parse_args = parser.parse_args()
@@ -589,7 +604,7 @@ def determine_threshold(threshold):
         return 0
 
 
-def make_filename(scan_within="/dali/lgrandi", filetype="input"):
+def make_filename(scan_within="/dali/lgrandi/", filetype="input"):
     # check on filetype
     assert filetype in ["input", "output"]
 
