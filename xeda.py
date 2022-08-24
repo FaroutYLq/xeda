@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 from tqdm import tqdm
 from datetime import datetime
 import os
-from analyzer import DUAnalyzer
+from analysis import DUAnalyzer
 
 DEFAULT_DEEP_SCAN = ["xenonnt", "xenon1t"]
 
