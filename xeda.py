@@ -18,7 +18,6 @@ def get_arguements():
     parser.add_argument(
         "-t",
         "--threshold",
-        choices=["None", "1TB", "500GB", "100GB"],
         default="None",
         help="Threshold for folders to show up in rough scan report. Do you want analysis on all folders all just folders with enough size?",
     )
