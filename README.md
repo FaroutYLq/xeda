@@ -15,7 +15,9 @@ Analyze disk usage to see how much each type of data contribute. It does the fol
 The simplest way to do a scan is to use the `batch_job.py` script, which submits the scanning jobs for both `dali` and `project2`. However, please keep in mind that if you want to do it this way, please change the paths which starts with `/home/yuanlq/...` to your own directory.
 
 Make sure you are in the suitable environment for example: `source activate strax`, and you have the correct directories. Then just simply run:
-```python batch_job.py```
+```
+python batch_job.py
+```
 
 ### Canonical
 
