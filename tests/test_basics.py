@@ -60,7 +60,7 @@ def test_scan_with_deep_scan():
 
 
 def test_without_deep_scan():
-    """test with deep scan."""
+    """test without deep scan."""
     dir_head = os.getcwd()
     output_dir = dir_head + "/tests/test_scans/"
     scan_dir = dir_head + "/tests/test_dir"
