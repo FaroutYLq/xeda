@@ -35,7 +35,7 @@ def get_arguements():
     parser.add_argument(
         "-d",
         "--deep_scan",
-        default="[xenonnt, xenon1t]",
+        default=None,
         help='A list of folders name to scan deeper and include in the report. eg. "[xenonnt, xenonnt, yuanlq]" OR yuanlq',
     )
     parser.add_argument(
@@ -110,12 +110,11 @@ def manage_arguements(args_dict, verbose=False):
     # Clean up formats
     if args_dict["scan_within"][-1] != "/":
         args_dict["scan_within"] += "/"
-    if args_dict["deep_scan"] == None:
-        args_dict["deep_scan"] = DEFAULT_DEEP_SCAN
-    if args_dict["deep_scan"][-1] == "]" and args_dict["deep_scan"][0] == "[":
-        # fomalize list
-        args_dict["deep_scan"] = args_dict["deep_scan"].replace(" ", "")
-        args_dict["deep_scan"] = list(args_dict["deep_scan"][1:-1].split(","))
+    if args_dict["deep_scan"] != None:
+        if args_dict["deep_scan"][-1] == "]" and args_dict["deep_scan"][0] == "[":
+            # fomalize list
+            args_dict["deep_scan"] = args_dict["deep_scan"].replace(" ", "")
+            args_dict["deep_scan"] = list(args_dict["deep_scan"][1:-1].split(","))
 
     # After clean-up
     print("After format clean-up or automatic directory assignment:")
@@ -139,7 +138,7 @@ def determine_threshold(threshold):
         size_thr_tb (float): size threshold in unit of TB.
     """
     unit = threshold[-2:]
-    number = threshold[:-2]
+    number = eval(threshold[:-2])
 
     if unit == "TB":
         coeff = 1

@@ -74,7 +74,7 @@ class DUAnalyzer:
                 )
                 with open(self.output_dir, "a") as f:
                     f.write("--------------\n")
-        else:
+        elif deep_scan != None:
             parent = deep_scan
             with open(self.output_dir, "a") as f:
                 f.write("Deeper scan for %s \n" % (parent))
