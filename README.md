@@ -31,7 +31,7 @@ A more detailed explanation can be found below
 | `-s`, `--scan_within` | Scope of analysis: target top directory of analysis. | `"/dali/lgrandi/"` | `"/dali/lgrandi/"` | True |
 | `-i`, `--input_dir` | Input the existing `du` scan result, as a txt file. Not necessary, and the program will do the scan if it's not specified and file name will be generated automatically based on scope and datetime. | `"/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_input_20220306.txt"` | None | False |
 | `-o`, `--output_dir` | Path or file name to output the analysis report. If you input a path instead of file name, the file name will be generated automatically based on scope and datetime. | `"/project2/lgrandi/yuanlq/shared/disk_usage/"` | None | True |
-| `-d`, `--deep_scan` | Deeper scan at these folders. | `"[xenonnt, xenon1t, yuanlq]"` | `"[xenonnt, xenon1t]"` | False |
+| `-d`, `--deep_scan` | Deeper scan at these folders. | `"[xenonnt, xenon1t, yuanlq]"` | None | False |
 | `-t`, `--threshold` | Threshold of minimum folder size to be analyzed. | `1TB` | `'None'` | False |
 
 ## Examples
