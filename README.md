@@ -11,6 +11,11 @@ Analyze disk usage to see how much each type of data contribute. It does the fol
 - Output the report in another txt file called "output". 
 
 ## Usage
+### Simplest
+The simplest way to do a scan is to use the `batch_job.py` script, which submits the scanning jobs for both `dali` and `project2`. However, please keep in mind that if you want to do it this way, please change the paths which starts with `/home/yuanlq/...` to your own directory.
+
+### Canonical
+
 First please make sure you are in the developement environment.
 
 For typical usage, please check the examples below:
