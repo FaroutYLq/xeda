@@ -19,6 +19,33 @@ CATEGORIES = [
     "hdf",
 ]
 
+ANALYSIS_DTYPE = np.dtype(
+    [
+        ("name", "<U64"),
+        ("total_tb", float),
+        ("total_n", int),
+        ("rawdata_tb", float),
+        ("records_tb", float),
+        ("peaks_tb", float),
+        ("root_tb", float),
+        ("pickle_tb", float),
+        ("jobs_tb", float),
+        ("figures_tb", float),
+        ("zips_tb", float),
+        ("hdf_tb", float),
+        ("others_tb", float),
+        ("rawdata_n", int),
+        ("records_n", int),
+        ("peaks_n", int),
+        ("root_n", int),
+        ("pickle_n", int),
+        ("jobs_n", int),
+        ("figures_n", int),
+        ("zips_n", int),
+        ("hdf_n", int),
+    ]
+)
+
 
 class DUAnalyzer:
     def __init__(
@@ -40,23 +67,27 @@ class DUAnalyzer:
         self.deep_scan = deep_scan
         self.threshold = threshold
 
-    
-
     def analyze(self):
         # welcome message
         print("\nDoing analysis now, this might take ~20 mins...\n")
         print("\nLoading input txt file...\n")
 
+        # some dupilication
+        deep_scan = self.deep_scan
+        scan_within = self.scan_within
+
         # load scan result
         sizes_kb, paths, self.total_size_kb = self.load_scan()
         print("Loaded input txt file.\n")
         print("Analyzing depths, parents and types...")
+
+        # analyze depth, parents and types
         depths, parents, types = self.determine_attributes(paths, self.scan_within)
         parent_names, parent_sizes = self.parent_rank(sizes_kb, depths, parents)
-        deep_scan = self.deep_scan
-        scan_within = self.scan_within
         print("Analyzed depths, parents and types.")
         print("Started to writing results...\n")
+
+        # remove output files if they already exist for today
         if exists(self.output_dir):
             print("%s existed already. Removing it..." % (self.output_dir))
             os.remove(self.output_dir)
@@ -64,11 +95,9 @@ class DUAnalyzer:
 
         # deep scan related
         print("\nDeep scan started... it may take ~10 mins.\n")
-
         # prepare the single deepscan path case.
         if type(deep_scan) == str:
             deep_scan = [deep_scan]
-
         # perform deep scanning。 if deep_scan == None then do nothing
         if type(deep_scan) == list:
             for parent in deep_scan:
@@ -86,6 +115,7 @@ class DUAnalyzer:
                 with open(self.output_dir, "a") as f:
                     f.write("--------------\n")
 
+        # main scan
         print("\nMain scan started... it may take ~15 mins.\n")
         self.parent_analysis = self.types_by_parent(
             sizes_kb,
@@ -97,6 +127,8 @@ class DUAnalyzer:
             self.threshold,
             print_result=self.print_result,
         )
+
+        # goodbye message
         print("\nAnalysis done!\n")
         print("Report saved at %s" % (self.output_dir))
 
@@ -259,37 +291,15 @@ class DUAnalyzer:
         threshold=0.05,
         print_result=True,
     ):
+        # Memory heavy job, so release some memory first
         gc.collect()
-        analysis_dtype = np.dtype(
-            [
-                ("name", "<U64"),
-                ("total_tb", float),
-                ("total_n", int),
-                ("rawdata_tb", float),
-                ("records_tb", float),
-                ("peaks_tb", float),
-                ("root_tb", float),
-                ("pickle_tb", float),
-                ("jobs_tb", float),
-                ("figures_tb", float),
-                ("zips_tb", float),
-                ("hdf_tb", float),
-                ("others_tb", float),
-                ("rawdata_n", int),
-                ("records_n", int),
-                ("peaks_n", int),
-                ("root_n", int),
-                ("pickle_n", int),
-                ("jobs_n", int),
-                ("figures_n", int),
-                ("zips_n", int),
-                ("hdf_n", int),
-            ]
-        )
+
+        # Init analysis dataframe
+        analysis_dtype = ANALYSIS_DTYPE
         parent_analysis = np.zeros(len(parent_sizes), dtype=analysis_dtype)
 
         for i in tqdm(range(len(parent_sizes))):
-            total = parent_sizes[i] / 1024**3
+            total = parent_sizes[i] / 1024**3  # in unit of TB
             others = total
 
             parent_analysis[i]["name"] = parent_names[i]
@@ -307,8 +317,10 @@ class DUAnalyzer:
                     '%s = np.sum(sizes_kb[(parents==parent_names[i])&(types=="%s")])/1024**3'
                     % (cat, cat)
                 )
-                others -= eval(cat)
                 parent_analysis[i][cat + "_tb"] = eval(cat)
+
+                # subtract the size of the found type from total size to get others
+                others -= eval(cat)
 
             parent_analysis[i]["others_tb"] = others
 
@@ -385,41 +397,10 @@ class DUAnalyzer:
         if print_result:
             print("--------------\n")
 
-        # Overview
+        # Overview: usage by each type
         total_scanned_tb = parent_analysis["others_tb"].sum()
         for cat in CATEGORIES:
             total_scanned_tb += parent_analysis[cat + "_tb"].sum()
-
-        if print_result:
-            print(
-                "Total storage scanned: %s TB"
-                % (np.round(total_scanned_tb, decimals=3))
-            )
-            for cat in CATEGORIES:
-                print(
-                    "    ",
-                    cat + " : ",
-                    np.around(parent_analysis[cat + "_tb"].sum(), decimals=3),
-                    "TB",
-                    "  ",
-                    np.around(
-                        100 * parent_analysis[cat + "_tb"].sum() / total_scanned_tb,
-                        decimals=3,
-                    ),
-                    "%  " + str(parent_analysis[cat + "_n"].sum()),
-                )
-            print(
-                "    ",
-                "others : ",
-                np.around(parent_analysis["others_tb"].sum(), decimals=3),
-                "TB",
-                "  ",
-                np.around(
-                    100 * parent_analysis["others_tb"].sum() / total_scanned_tb,
-                    decimals=3,
-                ),
-                "%",
-            )
 
         with open(self.output_dir, "a") as f:
             f.write("Summary:" + "\n")
@@ -461,4 +442,39 @@ class DUAnalyzer:
             )
             f.write("==============\n")
         np.save(self.output_dir.replace(".txt", ".npy"), parent_analysis)
+        print(
+            "Analysis npy file saved at %s" % (self.output_dir.replace(".txt", ".npy"))
+        )
+
+        if print_result:
+            print(
+                "Total storage scanned: %s TB"
+                % (np.round(total_scanned_tb, decimals=3))
+            )
+            for cat in CATEGORIES:
+                print(
+                    "    ",
+                    cat + " : ",
+                    np.around(parent_analysis[cat + "_tb"].sum(), decimals=3),
+                    "TB",
+                    "  ",
+                    np.around(
+                        100 * parent_analysis[cat + "_tb"].sum() / total_scanned_tb,
+                        decimals=3,
+                    ),
+                    "%  " + str(parent_analysis[cat + "_n"].sum()),
+                )
+            print(
+                "    ",
+                "others : ",
+                np.around(parent_analysis["others_tb"].sum(), decimals=3),
+                "TB",
+                "  ",
+                np.around(
+                    100 * parent_analysis["others_tb"].sum() / total_scanned_tb,
+                    decimals=3,
+                ),
+                "%",
+            )
+
         return parent_analysis
