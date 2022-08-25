@@ -40,9 +40,14 @@ class DUAnalyzer:
         self.deep_scan = deep_scan
         self.threshold = threshold
 
+    
+
     def analyze(self):
+        # welcome message
         print("\nDoing analysis now, this might take ~20 mins...\n")
         print("\nLoading input txt file...\n")
+
+        # load scan result
         sizes_kb, paths, self.total_size_kb = self.load_scan()
         print("Loaded input txt file.\n")
         print("Analyzing depths, parents and types...")
@@ -59,6 +64,12 @@ class DUAnalyzer:
 
         # deep scan related
         print("\nDeep scan started... it may take ~10 mins.\n")
+
+        # prepare the single deepscan path case.
+        if type(deep_scan) == str:
+            deep_scan = [deep_scan]
+
+        # perform deep scanning。 if deep_scan == None then do nothing
         if type(deep_scan) == list:
             for parent in deep_scan:
                 print("\nDeep scanning %s\n" % (parent))
@@ -74,20 +85,6 @@ class DUAnalyzer:
                 )
                 with open(self.output_dir, "a") as f:
                     f.write("--------------\n")
-        elif deep_scan != None:
-            parent = deep_scan
-            with open(self.output_dir, "a") as f:
-                f.write("Deeper scan for %s \n" % (parent))
-            ss = sizes_kb[parents == parent]
-            ps = paths[parents == parent]
-            sw = scan_within + parent + "/"
-            ds, pts, ts = self.determine_attributes(ps, sw)
-            pns, pss = self.parent_rank(ss[:-1], ds, pts)
-            _ = self.types_by_parent(
-                ss[:-1], ds, pts, pss, pns, ts, print_result=self.print_result
-            )
-            with open(self.output_dir, "a") as f:
-                f.write("--------------\n")
 
         print("\nMain scan started... it may take ~15 mins.\n")
         self.parent_analysis = self.types_by_parent(
@@ -149,6 +146,17 @@ class DUAnalyzer:
         return sizes_kb, paths, total_size_kb
 
     def determine_attributes(self, paths, scan_within):
+        """Given the paths, find the depths, parents and types of each path
+
+        Args:
+            paths (1darray): name of all scanned paths.
+            scan_within (str): a path in which you scan. eg. '/dali/lgrandi/'
+
+        Returns:
+            depths (1darray): the depth of each path in absolute directory.
+            parents (1darray): the second deepest folder in this path.
+            types (1darray): the type of this path. if a directory, it reads 'others' too.
+        """
         gc.collect()
         if scan_within != self.scan_within:
             paths = paths[:-1]
@@ -221,10 +229,23 @@ class DUAnalyzer:
         return depths, parents, types
 
     def parent_rank(self, sizes, depths, parents):
+        """rank the parent names and sizes based on their sizes, from largest to smallest.
+
+        Args:
+            sizes (1darray): size of a path
+            depths (1darray): the depth of each path in absolute directory.
+            parents (1darray): the second deepest folder in this path.
+
+        Returns:
+            _type_: _description_
+        """
         parent_sizes = sizes[depths == 1]
         parent_names = parents[depths == 1]
+
+        # rank from largest to smallest
         parent_names = parent_names[np.argsort(parent_sizes)[::-1]]
         parent_sizes = parent_sizes[np.argsort(parent_sizes)[::-1]]
+
         return parent_names, parent_sizes
 
     def types_by_parent(
