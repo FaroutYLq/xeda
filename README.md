@@ -9,6 +9,7 @@ Analyze disk usage to see how much each type of data contribute. It does the fol
   - Check the data type and corresponding size for each user.
   - Do one more depth deeper scan in the specified folders.
 - Output the report in another txt file called "output". 
+- History tracking and significant usage alarm.
 
 ## Usage
 ### Simplest
