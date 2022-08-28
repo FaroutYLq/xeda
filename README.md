@@ -72,5 +72,12 @@ import adv_analysis
 # Load the analysis data sheet. Please modify the path in your case
 dali = np.load('/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_output_20220823.npy')
 
+# Scatter in file number VS size space
 adv_analysis.scatter_usage(df=dali, server='dali')
+
+# track server history
+adv_analysis.track_server_history(db, server='dali', mode='size', show_last_n=20)
+
+# track user history
+adv_analysis.track_user_history(db, user='xenonnt', server='dali', mode='size', show_last_n=20)
 ```
