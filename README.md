@@ -63,3 +63,14 @@ Please find then at
 | `figures` | Human-readable figures including `.png`, `.jpg`, `.jpeg` |
 | `zips` | Zip files including `.zip` or `.gz` |
 | `others` | Other data type not classifed into any of them. Usually dominated by user-defined strax data |
+
+## Analysis
+Below is an example of some in-depth analysis beyond the report above.
+```
+import adv_analysis
+
+# Load the analysis data sheet. Please modify the path in your case
+dali = np.load('/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_output_20220823.npy')
+
+adv_analysis.scatter_usage(df=dali, server='dali')
+```
