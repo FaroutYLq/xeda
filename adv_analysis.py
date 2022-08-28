@@ -203,16 +203,16 @@ def make_db(
 def track_user_history(db, user, server="dali", mode="size", show_last_n=20):
     assert mode == "size" or mode == "counts"
 
-    user_docs = db[user]
-    length = min(len(user_docs["total_tb"]), show_last_n)
-    accumulated = np.zeros(length)
-
     if mode == "size":
         mode_str = "_tb"
         ylabel = "Size [GB]"
     elif mode == "counts":
         mode_str = "_n"
         ylabel = "Counts"
+
+    user_docs = db[user]
+    length = min(len(user_docs["total_tb"]), show_last_n)
+    accumulated = np.zeros(length)
 
     plt.figure(dpi=200)
     plt.fill_between(
@@ -238,3 +238,73 @@ def track_user_history(db, user, server="dali", mode="size", show_last_n=20):
     plt.xticks(rotation=45)
 
     plt.show()
+
+
+def track_server_history(db, server="dali", mode="size", show_last_n=20):
+    assert mode == "size" or mode == "counts"
+
+    if mode == "size":
+        mode_str = "_tb"
+        ylabel = "Size [GB]"
+    elif mode == "counts":
+        mode_str = "_n"
+        ylabel = "Counts"
+
+    # Assumed xenonnt will always be there
+    times = db["xenonnt"]["time"]
+    length = min(len(times), show_last_n)
+    times = times[-length:]
+    accumulated = np.zeros(length)
+    server_doc = np.zeros_like(db["xenonnt"])
+    server_doc["time"] = times
+
+    users = list(db.keys())
+    for user in users:
+        user_doc = db[user]
+        user_times = user_doc["time"]
+
+        # This user has been long existing
+        if len(user_times) == len(times):
+            server_doc["total" + mode_str] += user_doc["total" + mode_str]
+            for cat in CATEGORIES:
+                server_doc[cat + mode_str] += user_doc[cat + mode_str]
+        else:
+            for t in times:
+                if t in user_times:
+                    mask_time = server_doc["time"] == t
+                    server_doc[mask_time]["total" + mode_str] += user_doc[mask_time][
+                        "total" + mode_str
+                    ]
+                    for cat in CATEGORIES:
+                        server_doc[mask_time][cat + mode_str] += user_doc[mask_time][
+                            cat + mode_str
+                        ]
+
+    plt.figure(dpi=200)
+    plt.fill_between(
+        x=server_doc["time"][-length:],
+        y1=server_doc["total" + mode_str][-length:],
+        label="others",
+        color="k",
+        alpha=0.7,
+    )
+
+    for cat in CATEGORIES:
+        plt.fill_between(
+            x=server_doc["time"][-length:],
+            y1=accumulated,
+            y2=accumulated + server_doc[cat + mode_str][-length:],
+            label=cat,
+        )
+        accumulated += server_doc[cat + mode_str][-length:]
+
+        plt.legend(loc="lower left")
+        plt.title(server)
+        plt.ylabel(ylabel)
+        plt.xticks(rotation=45)
+
+    plt.show()
+
+
+def compare_to_last_time():
+    pass
