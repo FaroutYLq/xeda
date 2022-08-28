@@ -4,12 +4,12 @@ from os import listdir
 from datetime import datetime
 from analysis import CATEGORIES
 
-used_tb_dict = {"project2": 20.59, "dali": 242.52}
 limit_tb_dict = {"project2": 31.98, "dali": 266.00}
-used_files_dict = {"project2": 4080907, "dali": 35813229}
 limit_files_dict = {"project2": 5258000, "dali": 41357600}
 alarm_tb_dict = {"project2": 1, "dali": 2}
 alarm_files_dict = {"project2": 100000, "dali": 200000}
+alarm_specific_tb_dict = {"project2": 0.5, "dali": 1}
+alarm_specific_files_dict = {"project2": 50000, "dali": 100000}
 
 DB_DTYPE = [
     (("datetime of the scan", "time"), datetime),
@@ -36,7 +36,7 @@ DB_DTYPE = [
 ]
 
 
-def scatter_usage(df, server="dali"):
+def scatter_total_usage(df, server="dali"):
     plt.figure(dpi=200)
     plt.scatter(df["total_n"], df["total_tb"] * 1024, s=1)
     plt.xscale("log")
@@ -44,14 +44,12 @@ def scatter_usage(df, server="dali"):
     plt.xlabel("File counts")
     plt.ylabel("Size [GB]")
     plt.title(
-        "%s: %s(%s)/%sTB; \n %s(%s)/%s files"
+        "%s total: %s/%sTB; \n %s/%s files"
         % (
             server,
             np.round(df["total_tb"].sum(), decimals=2),
-            used_tb_dict[server],
             limit_tb_dict[server],
             df["total_n"].sum(),
-            used_files_dict[server],
             limit_files_dict[server],
         )
     )
@@ -64,11 +62,74 @@ def scatter_usage(df, server="dali"):
         & (df["name"] != "xenonnt")
         & (df["name"] != "xenon1t")
     )
+
+    plt.fill_between(
+        x=[0, alarm_files_dict[server]],
+        y1=alarm_tb_dict[server] * 1024,
+        color="k",
+        alpha=0.1,
+    )
+
     for folder in df[mask]:
         plt.scatter(folder["total_n"], folder["total_tb"] * 1024, label=folder["name"])
     plt.legend()
 
     plt.show()
+
+
+def scatter_specific_usage(df, server="dali", dtype="root"):
+    assert (
+        dtype in CATEGORIES
+    ), "Please input a valid type among the following: \n%s" % (CATEGORIES)
+
+    plt.figure(dpi=200)
+    plt.scatter(df["%s_n" % (dtype)], df["%s_tb" % (dtype)] * 1024, s=1)
+    plt.xscale("log")
+    plt.yscale("log")
+    plt.xlabel("File counts")
+    plt.ylabel("Size [GB]")
+    plt.title(
+        "%s %s: %sTB; %s files"
+        % (
+            server,
+            dtype,
+            np.round(df["%s_tb" % (dtype)].sum(), decimals=2),
+            df["%s_n" % (dtype)].sum(),
+        )
+    )
+
+    mask = (
+        (
+            (df["%s_n" % (dtype)] > alarm_specific_files_dict[server])
+            | (df["%s_tb" % (dtype)] > alarm_specific_tb_dict[server])
+        )
+        & (df["name"] != "xenonnt")
+        & (df["name"] != "xenon1t")
+    )
+
+    plt.fill_between(
+        x=[0, alarm_specific_files_dict[server]],
+        y1=alarm_specific_tb_dict[server] * 1024,
+        color="k",
+        alpha=0.1,
+    )
+
+    for folder in df[mask]:
+        plt.scatter(
+            folder["%s_n" % (dtype)],
+            folder["%s_tb" % (dtype)] * 1024,
+            label=folder["name"],
+        )
+    plt.legend()
+
+    plt.show()
+
+
+def scatter_usage(df, server="dali"):
+    scatter_total_usage(df, server)
+
+    for cat in CATEGORIES:
+        scatter_specific_usage(df, server, cat)
 
 
 def find_file_list(
