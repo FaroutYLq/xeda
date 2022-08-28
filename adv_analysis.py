@@ -209,8 +209,10 @@ def track_user_history(db, user, server="dali", mode="size", show_last_n=20):
 
     if mode == "size":
         mode_str = "_tb"
+        ylabel = 'Size [GB]'
     elif mode == "counts":
         mode_str = "_n"
+        ylabel = 'Counts'
 
     plt.figure(dpi=200)
     plt.fill_between(
