@@ -11,6 +11,8 @@ ALARM_TB_DICT = {"project2": 1, "dali": 2}
 ALARM_FILES_DICT = {"project2": 100000, "dali": 200000}
 ALARM_SPECIFIC_TB_DICT = {"project2": 0.5, "dali": 1}
 ALARM_SPECIFIC_FILES_DICT = {"project2": 50000, "dali": 100000}
+ALARM_DELTA_TB_DICT = {"project2": 0.2, "dali": 0.4}
+ALARM_DELTA_FILES_DICT = {"project2": 50000, "dali": 10000}
 
 DB_DTYPE = [
     (("datetime of the scan", "time"), datetime),
@@ -69,6 +71,7 @@ def scatter_total_usage(df, server="dali"):
         y1=ALARM_TB_DICT[server] * 1024,
         color="k",
         alpha=0.1,
+        label="safe zone",
     )
 
     for folder in df[mask]:
@@ -113,6 +116,7 @@ def scatter_specific_usage(df, server="dali", dtype="root"):
         y1=ALARM_SPECIFIC_TB_DICT[server] * 1024,
         color="k",
         alpha=0.1,
+        label="safe zone",
     )
 
     for folder in df[mask]:
@@ -306,5 +310,75 @@ def track_server_history(db, server="dali", mode="size", show_last_n=20):
     plt.show()
 
 
-def compare_to_last_time():
-    pass
+def compare_to_last_time(db, server="dali"):
+    # Assumed xenonnt will always be there
+    times = db["xenonnt"]["time"][-2:]
+    users = list(db.keys())
+
+    d_size_gb = []
+    d_n = []
+    names = []
+
+    for user in users:
+        user_doc = db[user]
+        user_times = user_doc["time"]
+
+        # if this user only shows up once
+        if len(user_times) == 1:
+            # this user just shows up
+            if user_times[0] == times[-1]:
+                d_size_gb.append(db[user]["total_tb"])
+                d_n.append(db[user]["total_n"])
+                names.append(user)
+            # this user only showed up last time
+            elif user_times[0] == times[-2]:
+                d_size_gb.append(-db[user]["total_tb"])
+                d_n.append(-db[user]["total_n"])
+                names.append(user)
+        # if this user at least shows up twice
+        else:
+            # the name shows up in both this time and last
+            if user_times[-1] == times[-1] and user_times[-2] == times[-2]:
+                d_size_gb.append(db[user]["total_tb"][-1] - db[user]["total_tb"][-2])
+                d_n.append(db[user]["total_n"][-1] - db[user]["total_n"][-2])
+                names.append(user)
+            # missing this time
+            elif user_times[-1] != times[-1] and user_times[-2] == times[-2]:
+                d_size_gb.append(-db[user]["total_tb"])
+                d_n.append(-db[user]["total_n"])
+                names.append(user)
+            # misisng last time
+            elif user_times[-1] == times[-1] and user_times[-2] != times[-2]:
+                d_size_gb.append(db[user]["total_tb"])
+                d_n.append(db[user]["total_n"])
+                names.append(user)
+            # missing for both times
+            else:
+                pass
+
+    d_size_gb = np.array(d_size_gb)
+    d_size_gb = d_size_gb * 1024
+    d_n = np.array(d_n)
+    names = np.array(names)
+    mask_alarm = (d_n > ALARM_DELTA_FILES_DICT[server] * 1024) | (
+        d_size_gb > ALARM_DELTA_TB_DICT[server] * 1024
+    )
+
+    plt.figure(dpi=200)
+    plt.scatter(d_n, d_size_gb, s=1)
+    for n in names[mask_alarm]:
+        plt.scatter(d_n[names == n], d_size_gb[names == n], label=n)
+    plt.fill_between(
+        [np.min(d_n), ALARM_DELTA_FILES_DICT[server]],
+        y1=np.min(d_size_gb),
+        y2=1024 * ALARM_DELTA_TB_DICT[server],
+        color="k",
+        alpha=0.1,
+        label="safe zone",
+    )
+    plt.legend(loc="lower left")
+    plt.xlabel("Increased counts")
+    plt.ylabel("Increased size [GB]")
+    plt.title(server + " " + str(times[-2])[:10] + " VS " + str(times[-1])[:10])
+
+    plt.show()
