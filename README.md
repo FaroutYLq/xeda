@@ -75,9 +75,13 @@ dali = np.load('/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_output_2
 # Scatter in file number VS size space
 adv_analysis.scatter_usage(df=dali, server='dali')
 
-# track server history
+# Track server history
+db = adv_analysis.make_db(scan_within="/dali/lgrandi/", directory="/project2/lgrandi/yuanlq/shared/disk_usage/")
 adv_analysis.track_server_history(db, server='dali', mode='size', show_last_n=20)
 
-# track user history
+# Track user history
 adv_analysis.track_user_history(db, user='xenonnt', server='dali', mode='size', show_last_n=20)
+
+# Alarm if some users used significantly more compared to last scan
+adv_analysis.compare_to_last_time(db, server="dali")
 ```
