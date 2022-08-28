@@ -4,12 +4,13 @@ from os import listdir
 from datetime import datetime
 from analysis import CATEGORIES
 
-limit_tb_dict = {"project2": 31.98, "dali": 266.00}
-limit_files_dict = {"project2": 5258000, "dali": 41357600}
-alarm_tb_dict = {"project2": 1, "dali": 2}
-alarm_files_dict = {"project2": 100000, "dali": 200000}
-alarm_specific_tb_dict = {"project2": 0.5, "dali": 1}
-alarm_specific_files_dict = {"project2": 50000, "dali": 100000}
+
+LIMIT_TB_DICT = {"project2": 31.98, "dali": 266.00}
+LIMIT_FILES_DICT = {"project2": 5258000, "dali": 41357600}
+ALARM_TB_DICT = {"project2": 1, "dali": 2}
+ALARM_FILES_DICT = {"project2": 100000, "dali": 200000}
+ALARM_SPECIFIC_TB_DICT = {"project2": 0.5, "dali": 1}
+ALARM_SPECIFIC_FILES_DICT = {"project2": 50000, "dali": 100000}
 
 DB_DTYPE = [
     (("datetime of the scan", "time"), datetime),
@@ -48,31 +49,31 @@ def scatter_total_usage(df, server="dali"):
         % (
             server,
             np.round(df["total_tb"].sum(), decimals=2),
-            limit_tb_dict[server],
+            LIMIT_TB_DICT[server],
             df["total_n"].sum(),
-            limit_files_dict[server],
+            LIMIT_FILES_DICT[server],
         )
     )
 
     mask = (
         (
-            (df["total_n"] > alarm_files_dict[server])
-            | (df["total_tb"] > alarm_tb_dict[server])
+            (df["total_n"] > ALARM_FILES_DICT[server])
+            | (df["total_tb"] > ALARM_TB_DICT[server])
         )
         & (df["name"] != "xenonnt")
         & (df["name"] != "xenon1t")
     )
 
     plt.fill_between(
-        x=[0, alarm_files_dict[server]],
-        y1=alarm_tb_dict[server] * 1024,
+        x=[0, ALARM_FILES_DICT[server]],
+        y1=ALARM_TB_DICT[server] * 1024,
         color="k",
         alpha=0.1,
     )
 
     for folder in df[mask]:
         plt.scatter(folder["total_n"], folder["total_tb"] * 1024, label=folder["name"])
-    plt.legend()
+    plt.legend(loc="lower left")
 
     plt.show()
 
@@ -100,16 +101,16 @@ def scatter_specific_usage(df, server="dali", dtype="root"):
 
     mask = (
         (
-            (df["%s_n" % (dtype)] > alarm_specific_files_dict[server])
-            | (df["%s_tb" % (dtype)] > alarm_specific_tb_dict[server])
+            (df["%s_n" % (dtype)] > ALARM_SPECIFIC_FILES_DICT[server])
+            | (df["%s_tb" % (dtype)] > ALARM_SPECIFIC_TB_DICT[server])
         )
         & (df["name"] != "xenonnt")
         & (df["name"] != "xenon1t")
     )
 
     plt.fill_between(
-        x=[0, alarm_specific_files_dict[server]],
-        y1=alarm_specific_tb_dict[server] * 1024,
+        x=[0, ALARM_SPECIFIC_FILES_DICT[server]],
+        y1=ALARM_SPECIFIC_TB_DICT[server] * 1024,
         color="k",
         alpha=0.1,
     )
@@ -120,7 +121,7 @@ def scatter_specific_usage(df, server="dali", dtype="root"):
             folder["%s_tb" % (dtype)] * 1024,
             label=folder["name"],
         )
-    plt.legend()
+    plt.legend(loc="lower left")
 
     plt.show()
 
@@ -197,3 +198,41 @@ def make_db(
                 db[name] = write_doc(time, array[names == name])
 
     return db
+
+
+def track_user_history(db, user, server="dali", mode="size", show_last_n=20):
+    assert mode == "size" or mode == "counts"
+
+    user_docs = db[user]
+    length = min(len(user_docs["total_tb"]), show_last_n)
+    accumulated = np.zeros(length)
+
+    if mode == "size":
+        mode_str = "_tb"
+    elif mode == "counts":
+        mode_str = "_n"
+
+    plt.figure(dpi=200)
+    plt.fill_between(
+        x=user_docs["time"][-length:],
+        y1=np.zeros(length),
+        y2=1024 * user_docs["total" + mode_str][-length:],
+        label="others",
+        color="k",
+        alpha=0.7,
+    )
+    for cat in CATEGORIES:
+        plt.fill_between(
+            x=user_docs["time"][-length:],
+            y1=1024 * accumulated,
+            y2=1024 * (accumulated + user_docs[cat + mode_str][-length:]),
+            label=cat,
+        )
+        accumulated += user_docs[cat + mode_str][-length:]
+
+    plt.legend(loc="lower left")
+    plt.title("%s@%s" % (user, server))
+    plt.ylabel("Size [GB]")
+    plt.xticks(rotation=45)
+
+    plt.show()
