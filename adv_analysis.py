@@ -327,13 +327,13 @@ def compare_to_last_time(db, server="dali"):
         if len(user_times) == 1:
             # this user just shows up
             if user_times[0] == times[-1]:
-                d_size_gb.append(db[user]["total_tb"])
-                d_n.append(db[user]["total_n"])
+                d_size_gb.append(db[user]["total_tb"][0])
+                d_n.append(db[user]["total_n"][0])
                 names.append(user)
             # this user only showed up last time
             elif user_times[0] == times[-2]:
-                d_size_gb.append(-db[user]["total_tb"])
-                d_n.append(-db[user]["total_n"])
+                d_size_gb.append(-db[user]["total_tb"][0])
+                d_n.append(-db[user]["total_n"][0])
                 names.append(user)
         # if this user at least shows up twice
         else:
@@ -344,13 +344,13 @@ def compare_to_last_time(db, server="dali"):
                 names.append(user)
             # missing this time
             elif user_times[-1] != times[-1] and user_times[-2] == times[-2]:
-                d_size_gb.append(-db[user]["total_tb"])
-                d_n.append(-db[user]["total_n"])
+                d_size_gb.append(-db[user]["total_tb"][-2])
+                d_n.append(-db[user]["total_n"][-2])
                 names.append(user)
             # misisng last time
             elif user_times[-1] == times[-1] and user_times[-2] != times[-2]:
-                d_size_gb.append(db[user]["total_tb"])
-                d_n.append(db[user]["total_n"])
+                d_size_gb.append(db[user]["total_tb"][-1])
+                d_n.append(db[user]["total_n"][-1])
                 names.append(user)
             # missing for both times
             else:
@@ -382,3 +382,8 @@ def compare_to_last_time(db, server="dali"):
     plt.title(server + " " + str(times[-2])[:10] + " VS " + str(times[-1])[:10])
 
     plt.show()
+
+
+#%%
+
+#%%
