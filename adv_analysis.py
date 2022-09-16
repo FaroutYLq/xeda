@@ -217,21 +217,22 @@ def track_user_history(db, user, server="dali", mode="size", show_last_n=20):
     user_docs = db[user]
     length = min(len(user_docs["total_tb"]), show_last_n)
     accumulated = np.zeros(length)
+    result_times = user_docs["time"][-length:]
 
     plt.figure(dpi=200)
     plt.fill_between(
-        x=user_docs["time"][-length:],
+        x=np.sort(result_times),
         y1=np.zeros(length),
-        y2=1024 * user_docs["total" + mode_str][-length:],
+        y2=1024 * user_docs["total" + mode_str][-length:][np.argsort(result_times)],
         label="others",
         color="k",
         alpha=0.7,
     )
     for cat in CATEGORIES:
         plt.fill_between(
-            x=user_docs["time"][-length:],
-            y1=1024 * accumulated,
-            y2=1024 * (accumulated + user_docs[cat + mode_str][-length:]),
+            x=np.sort(result_times),
+            y1=1024 * accumulated[np.argsort(result_times)],
+            y2=1024 * (accumulated + user_docs[cat + mode_str][-length:][np.argsort(result_times)]),
             label=cat,
         )
         accumulated += user_docs[cat + mode_str][-length:]
@@ -277,18 +278,19 @@ def track_server_history(db, server="dali", mode="size", show_last_n=20):
                 if t in user_times:
                     mask_time_server = server_doc["time"] == t
                     mask_time_user = user_doc["time"] == t
-                    server_doc[mask_time_server]["total" + mode_str] += user_doc[
-                        mask_time_user
-                    ]["total" + mode_str]
+                    server_doc[mask_time_server]["total" + mode_str] += user_doc[mask_time_user][
+                        "total" + mode_str
+                    ]
                     for cat in CATEGORIES:
-                        server_doc[mask_time_server][cat + mode_str] += user_doc[
-                            mask_time_user
-                        ][cat + mode_str]
+                        server_doc[mask_time_server][cat + mode_str] += user_doc[mask_time_user][
+                            cat + mode_str
+                        ]
 
+    result_times = server_doc["time"][-length:]
     plt.figure(dpi=200)
     plt.fill_between(
-        x=server_doc["time"][-length:],
-        y1=server_doc["total" + mode_str][-length:],
+        x=np.sort(result_times),
+        y1=server_doc["total" + mode_str][-length:][np.argsort(result_times)],
         label="others",
         color="k",
         alpha=0.7,
@@ -296,17 +298,17 @@ def track_server_history(db, server="dali", mode="size", show_last_n=20):
 
     for cat in CATEGORIES:
         plt.fill_between(
-            x=server_doc["time"][-length:],
-            y1=accumulated,
-            y2=accumulated + server_doc[cat + mode_str][-length:],
+            x=np.sort(result_times),
+            y1=accumulated[np.argsort(result_times)],
+            y2=accumulated + server_doc[cat + mode_str][-length:][np.argsort(result_times)],
             label=cat,
         )
         accumulated += server_doc[cat + mode_str][-length:]
 
-        plt.legend(loc="lower left")
-        plt.title(server)
-        plt.ylabel(ylabel)
-        plt.xticks(rotation=45)
+    plt.legend(loc="lower left")
+    plt.title(server)
+    plt.ylabel(ylabel)
+    plt.xticks(rotation=45)
 
     plt.show()
 
