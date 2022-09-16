@@ -3,8 +3,8 @@ from pathlib import Path
 from datetime import datetime
 from subprocess import run
 import socket
-import adv_analysis
-import numpy as np
+#import adv_analysis
+#import numpy as np
 
 # Not available yet since numpy is not importable on github auto test?
 """
