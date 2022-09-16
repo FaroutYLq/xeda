@@ -6,8 +6,12 @@ import socket
 import numpy as np
 import adv_analysis
 
-DALI_OUTPUT = np.load('/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_output_20220914.npy')
-PROJECT2_OUTPUT = np.load('/project2/lgrandi/yuanlq/shared/disk_usage/project2_lgrandi_output_20220914.npy')
+DALI_OUTPUT = np.load(
+    "/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_output_20220914.npy"
+)
+PROJECT2_OUTPUT = np.load(
+    "/project2/lgrandi/yuanlq/shared/disk_usage/project2_lgrandi_output_20220914.npy"
+)
 
 
 def test_scan_with_deep_scan():
@@ -117,33 +121,58 @@ def test_without_deep_scan():
 
 
 def test_scatter_usage():
-    """test scatter usage in adv_analysis.
-    """
-    adv_analysis.scatter_usage(PROJECT2_OUTPUT, server='project2')
-    adv_analysis.scatter_usage(DALI_OUTPUT, server='dali')
+    """test scatter usage in adv_analysis."""
+    adv_analysis.scatter_usage(PROJECT2_OUTPUT, server="project2")
+    adv_analysis.scatter_usage(DALI_OUTPUT, server="dali")
 
 
 def test_track_user_history():
-    """test track_user_history
-    """
-    db_dali = adv_analysis.make_db(scan_within="/dali/lgrandi/", directory="/project2/lgrandi/yuanlq/shared/disk_usage/")
-    adv_analysis.track_server_history(db_dali, server='dali', mode='size', show_last_n=20)
-    adv_analysis.track_server_history(db_dali, server='dali', mode='counts', show_last_n=20)
-    adv_analysis.track_user_history(db_dali, user='xenonnt', server='dali', mode='size', show_last_n=20)
-    adv_analysis.track_user_history(db_dali, user='xenonnt', server='dali', mode='counts', show_last_n=20)
+    """test track_user_history"""
+    db_dali = adv_analysis.make_db(
+        scan_within="/dali/lgrandi/",
+        directory="/project2/lgrandi/yuanlq/shared/disk_usage/",
+    )
+    adv_analysis.track_server_history(
+        db_dali, server="dali", mode="size", show_last_n=20
+    )
+    adv_analysis.track_server_history(
+        db_dali, server="dali", mode="counts", show_last_n=20
+    )
+    adv_analysis.track_user_history(
+        db_dali, user="xenonnt", server="dali", mode="size", show_last_n=20
+    )
+    adv_analysis.track_user_history(
+        db_dali, user="xenonnt", server="dali", mode="counts", show_last_n=20
+    )
 
-    db_project2 = adv_analysis.make_db(scan_within="/dali/project2/", directory="/project2/lgrandi/yuanlq/shared/disk_usage/")
-    adv_analysis.track_server_history(db_project2, server='project2', mode='size', show_last_n=20)
-    adv_analysis.track_server_history(db_project2, server='project2', mode='counts', show_last_n=20)
-    adv_analysis.track_user_history(db_project2, user='xenonnt', server='project2', mode='counts', show_last_n=20)
-    adv_analysis.track_user_history(db_project2, user='xenonnt', server='project2', mode='counts', show_last_n=20)
+    db_project2 = adv_analysis.make_db(
+        scan_within="/dali/project2/",
+        directory="/project2/lgrandi/yuanlq/shared/disk_usage/",
+    )
+    adv_analysis.track_server_history(
+        db_project2, server="project2", mode="size", show_last_n=20
+    )
+    adv_analysis.track_server_history(
+        db_project2, server="project2", mode="counts", show_last_n=20
+    )
+    adv_analysis.track_user_history(
+        db_project2, user="xenonnt", server="project2", mode="counts", show_last_n=20
+    )
+    adv_analysis.track_user_history(
+        db_project2, user="xenonnt", server="project2", mode="counts", show_last_n=20
+    )
 
 
 def test_track_user_history():
-    """test track_user_history
-    """
-    db_dali = adv_analysis.make_db(scan_within="/dali/lgrandi/", directory="/project2/lgrandi/yuanlq/shared/disk_usage/")
+    """test track_user_history"""
+    db_dali = adv_analysis.make_db(
+        scan_within="/dali/lgrandi/",
+        directory="/project2/lgrandi/yuanlq/shared/disk_usage/",
+    )
     adv_analysis.compare_to_last_time(db_dali, server="dali")
 
-    db_project2 = adv_analysis.make_db(scan_within="/dali/project2/", directory="/project2/lgrandi/yuanlq/shared/disk_usage/")
+    db_project2 = adv_analysis.make_db(
+        scan_within="/dali/project2/",
+        directory="/project2/lgrandi/yuanlq/shared/disk_usage/",
+    )
     adv_analysis.compare_to_last_time(db_project2, server="project2")

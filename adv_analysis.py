@@ -275,14 +275,15 @@ def track_server_history(db, server="dali", mode="size", show_last_n=20):
         else:
             for t in times:
                 if t in user_times:
-                    mask_time = server_doc["time"] == t
-                    server_doc[mask_time]["total" + mode_str] += user_doc[mask_time][
-                        "total" + mode_str
-                    ]
+                    mask_time_server = server_doc["time"] == t
+                    mask_time_user = user_doc["time"] == t
+                    server_doc[mask_time_server]["total" + mode_str] += user_doc[
+                        mask_time_user
+                    ]["total" + mode_str]
                     for cat in CATEGORIES:
-                        server_doc[mask_time][cat + mode_str] += user_doc[mask_time][
-                            cat + mode_str
-                        ]
+                        server_doc[mask_time_server][cat + mode_str] += user_doc[
+                            mask_time_user
+                        ][cat + mode_str]
 
     plt.figure(dpi=200)
     plt.fill_between(
@@ -382,8 +383,3 @@ def compare_to_last_time(db, server="dali"):
     plt.title(server + " " + str(times[-2])[:10] + " VS " + str(times[-1])[:10])
 
     plt.show()
-
-
-#%%
-
-#%%
