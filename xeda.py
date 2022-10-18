@@ -186,9 +186,7 @@ def du(args_dict):
 
     # Organizing
     command = (
-        "du -la --exclude="
-        + args_dict["scan_within"]
-        + "rucio "
+        "du -la "
         + args_dict["scan_within"]
         + ">"
         + args_dict["input_dir"]
