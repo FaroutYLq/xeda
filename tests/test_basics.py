@@ -3,8 +3,9 @@ from pathlib import Path
 from datetime import datetime
 from subprocess import run
 import socket
-#import adv_analysis
-#import numpy as np
+
+# import adv_analysis
+# import numpy as np
 
 # Not available yet since numpy is not importable on github auto test?
 """
@@ -121,6 +122,7 @@ def test_without_deep_scan():
     # if pytest is run by github, do nothing
     else:
         pass
+
 
 # Not working yet...
 '''

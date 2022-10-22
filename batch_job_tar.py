@@ -8,8 +8,12 @@ from utilix.batchq import *
 print(utilix.__file__)
 
 _, absolute_dir = sys.argv
-assert absolute_dir[0] == '/', "Please input an absolute directory!"
-assert absolute_dir.split('/')[1] in ('dali', 'project2'), "Now this script only supports dali or project2."
+assert absolute_dir[0] == "/", "Please input an absolute directory!"
+assert absolute_dir.split("/")[1] in (
+    "dali",
+    "project2",
+), "Now this script only supports dali or project2."
+
 
 class Submit(object):
     """
@@ -46,18 +50,17 @@ class Submit(object):
     def _submit_single(self, loop_index, loop_item):
         jobname = "tar_%s" % (loop_item)
         # Modify here for the script to run
-        jobstring = (
-            "python /home/yuanlq/software/xeda/tar_and_split.py %s"
-            % (loop_item)
+        jobstring = "python /home/yuanlq/software/xeda/tar_and_split.py %s" % (
+            loop_item
         )
-        print('Running this job string: ')
+        print("Running this job string: ")
         print(jobstring)
 
         # Modify here for the log name
         utilix.batchq.submit_job(
             jobstring,
             log="/home/yuanlq/.tmp_job_submission/tar_%s_%s.log"
-            % (loop_item.split('/')[1],loop_item.split('/')[3]),
+            % (loop_item.split("/")[1], loop_item.split("/")[3]),
             partition="dali",
             qos="dali",
             account="pi-lgrandi",

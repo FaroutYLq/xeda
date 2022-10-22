@@ -185,12 +185,7 @@ def du(args_dict):
     )
 
     # Organizing
-    command = (
-        "du -la "
-        + args_dict["scan_within"]
-        + ">"
-        + args_dict["input_dir"]
-    )
+    command = "du -la " + args_dict["scan_within"] + ">" + args_dict["input_dir"]
     print("Running the following command: ")
     print(command)
 

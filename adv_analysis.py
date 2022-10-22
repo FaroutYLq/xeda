@@ -58,12 +58,10 @@ def scatter_total_usage(df, server="dali"):
     )
 
     mask = (
-        (
-            (df["total_n"] > ALARM_FILES_DICT[server])
-            | (df["total_tb"] > ALARM_TB_DICT[server])
-        )
-        #& (df["name"] != "xenonnt")
-        #& (df["name"] != "xenon1t")
+        (df["total_n"] > ALARM_FILES_DICT[server])
+        | (df["total_tb"] > ALARM_TB_DICT[server])
+        # & (df["name"] != "xenonnt")
+        # & (df["name"] != "xenon1t")
     )
 
     plt.fill_between(
@@ -103,12 +101,10 @@ def scatter_specific_usage(df, server="dali", dtype="root"):
     )
 
     mask = (
-        (
-            (df["%s_n" % (dtype)] > ALARM_SPECIFIC_FILES_DICT[server])
-            | (df["%s_tb" % (dtype)] > ALARM_SPECIFIC_TB_DICT[server])
-        )
-        #& (df["name"] != "xenonnt")
-        #& (df["name"] != "xenon1t")
+        (df["%s_n" % (dtype)] > ALARM_SPECIFIC_FILES_DICT[server])
+        | (df["%s_tb" % (dtype)] > ALARM_SPECIFIC_TB_DICT[server])
+        # & (df["name"] != "xenonnt")
+        # & (df["name"] != "xenon1t")
     )
 
     plt.fill_between(
@@ -271,7 +267,7 @@ def track_server_history(db, server="dali", mode="size", show_last_n=30):
     users = list(db.keys())
     for user in users:
         user_doc = db[user]
-        user_argsort =  user_doc["time"].argsort()
+        user_argsort = user_doc["time"].argsort()
         user_times = user_doc["time"][user_argsort]
         user_total = user_doc["total" + mode_str][user_argsort]
         # This user has been long existing
@@ -279,14 +275,18 @@ def track_server_history(db, server="dali", mode="size", show_last_n=30):
             server_doc["total" + mode_str][times_argsort] += user_total
             for cat in CATEGORIES:
                 user_cat_total = user_doc[cat + mode_str][user_argsort]
-                server_doc[cat + mode_str][times_argsort] += user_doc[cat + mode_str][user_argsort]
+                server_doc[cat + mode_str][times_argsort] += user_doc[cat + mode_str][
+                    user_argsort
+                ]
 
         else:
             for t in times:
                 if t in user_times:
                     i_time_server = np.where(server_doc["time"] == t)[0]
                     i_time_user = np.where(user_doc[user_argsort]["time"] == t)[0]
-                    server_doc["total" + mode_str][i_time_server] += user_total[i_time_user]
+                    server_doc["total" + mode_str][i_time_server] += user_total[
+                        i_time_user
+                    ]
                     for cat in CATEGORIES:
                         user_cat_total = user_doc[cat + mode_str][i_time_user]
                         server_doc[cat + mode_str][i_time_server] += user_cat_total
@@ -302,7 +302,7 @@ def track_server_history(db, server="dali", mode="size", show_last_n=30):
     )
 
     plt.grid()
-    plt.axhline(LIMIT_TB_DICT[server], color='b')
+    plt.axhline(LIMIT_TB_DICT[server], color="b")
 
     for cat in CATEGORIES:
         plt.fill_between(
@@ -323,7 +323,7 @@ def track_server_history(db, server="dali", mode="size", show_last_n=30):
 
 def compare_to_last_time(db, server="dali"):
     # Assumed xenonnt will always be there
-    
+
     times = db["xenonnt"]["time"][-2:]
     times.sort()
     times = times[-2:]
@@ -355,8 +355,14 @@ def compare_to_last_time(db, server="dali"):
         else:
             # the name shows up in both this time and last
             if user_times[-1] == times[-1] and user_times[-2] == times[-2]:
-                d_size_gb.append(db[user]["total_tb"][user_argsort][-1] - db[user]["total_tb"][user_argsort][-2])
-                d_n.append(db[user]["total_n"][user_argsort][-1] - db[user]["total_n"][user_argsort][-2])
+                d_size_gb.append(
+                    db[user]["total_tb"][user_argsort][-1]
+                    - db[user]["total_tb"][user_argsort][-2]
+                )
+                d_n.append(
+                    db[user]["total_n"][user_argsort][-1]
+                    - db[user]["total_n"][user_argsort][-2]
+                )
                 names.append(user)
             # missing this time
             elif user_times[-1] != times[-1] and user_times[-2] == times[-2]:
