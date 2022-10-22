@@ -62,8 +62,8 @@ def scatter_total_usage(df, server="dali"):
             (df["total_n"] > ALARM_FILES_DICT[server])
             | (df["total_tb"] > ALARM_TB_DICT[server])
         )
-        & (df["name"] != "xenonnt")
-        & (df["name"] != "xenon1t")
+        #& (df["name"] != "xenonnt")
+        #& (df["name"] != "xenon1t")
     )
 
     plt.fill_between(
@@ -77,7 +77,7 @@ def scatter_total_usage(df, server="dali"):
     for folder in df[mask]:
         plt.scatter(folder["total_n"], folder["total_tb"] * 1024, label=folder["name"])
     plt.legend(loc="lower left")
-
+    plt.grid()
     plt.show()
 
 
@@ -107,8 +107,8 @@ def scatter_specific_usage(df, server="dali", dtype="root"):
             (df["%s_n" % (dtype)] > ALARM_SPECIFIC_FILES_DICT[server])
             | (df["%s_tb" % (dtype)] > ALARM_SPECIFIC_TB_DICT[server])
         )
-        & (df["name"] != "xenonnt")
-        & (df["name"] != "xenon1t")
+        #& (df["name"] != "xenonnt")
+        #& (df["name"] != "xenon1t")
     )
 
     plt.fill_between(
@@ -126,7 +126,7 @@ def scatter_specific_usage(df, server="dali", dtype="root"):
             label=folder["name"],
         )
     plt.legend(loc="lower left")
-
+    plt.grid()
     plt.show()
 
 
@@ -250,7 +250,7 @@ def track_server_history(db, server="dali", mode="size", show_last_n=20):
 
     if mode == "size":
         mode_str = "_tb"
-        ylabel = "Size [GB]"
+        ylabel = "Size [TB]"
     elif mode == "counts":
         mode_str = "_n"
         ylabel = "Counts"
@@ -315,7 +315,10 @@ def track_server_history(db, server="dali", mode="size", show_last_n=20):
 
 def compare_to_last_time(db, server="dali"):
     # Assumed xenonnt will always be there
+    
     times = db["xenonnt"]["time"][-2:]
+    times.sort()
+    times = times[-2:]
     users = list(db.keys())
 
     d_size_gb = []
@@ -324,36 +327,38 @@ def compare_to_last_time(db, server="dali"):
 
     for user in users:
         user_doc = db[user]
+        user_argsort = user_doc["time"].argsort()
         user_times = user_doc["time"]
+        user_times.sort()
 
         # if this user only shows up once
         if len(user_times) == 1:
             # this user just shows up
             if user_times[0] == times[-1]:
-                d_size_gb.append(db[user]["total_tb"][0])
-                d_n.append(db[user]["total_n"][0])
+                d_size_gb.append(db[user]["total_tb"][user_argsort][0])
+                d_n.append(db[user]["total_n"][user_argsort][0])
                 names.append(user)
             # this user only showed up last time
             elif user_times[0] == times[-2]:
-                d_size_gb.append(-db[user]["total_tb"][0])
-                d_n.append(-db[user]["total_n"][0])
+                d_size_gb.append(-db[user]["total_tb"][user_argsort][0])
+                d_n.append(-db[user]["total_n"][user_argsort][0])
                 names.append(user)
         # if this user at least shows up twice
         else:
             # the name shows up in both this time and last
             if user_times[-1] == times[-1] and user_times[-2] == times[-2]:
-                d_size_gb.append(db[user]["total_tb"][-1] - db[user]["total_tb"][-2])
-                d_n.append(db[user]["total_n"][-1] - db[user]["total_n"][-2])
+                d_size_gb.append(db[user]["total_tb"][user_argsort][-1] - db[user]["total_tb"][user_argsort][-2])
+                d_n.append(db[user]["total_n"][user_argsort][-1] - db[user]["total_n"][user_argsort][-2])
                 names.append(user)
             # missing this time
             elif user_times[-1] != times[-1] and user_times[-2] == times[-2]:
-                d_size_gb.append(-db[user]["total_tb"][-2])
-                d_n.append(-db[user]["total_n"][-2])
+                d_size_gb.append(-db[user]["total_tb"][user_argsort][-2])
+                d_n.append(-db[user]["total_n"][user_argsort][-2])
                 names.append(user)
             # misisng last time
             elif user_times[-1] == times[-1] and user_times[-2] != times[-2]:
-                d_size_gb.append(db[user]["total_tb"][-1])
-                d_n.append(db[user]["total_n"][-1])
+                d_size_gb.append(db[user]["total_tb"][user_argsort][-1])
+                d_n.append(db[user]["total_n"][user_argsort][-1])
                 names.append(user)
             # missing for both times
             else:
@@ -363,7 +368,7 @@ def compare_to_last_time(db, server="dali"):
     d_size_gb = d_size_gb * 1024
     d_n = np.array(d_n)
     names = np.array(names)
-    mask_alarm = (d_n > ALARM_DELTA_FILES_DICT[server] * 1024) | (
+    mask_alarm = (d_n > ALARM_DELTA_FILES_DICT[server]) | (
         d_size_gb > ALARM_DELTA_TB_DICT[server] * 1024
     )
 
@@ -383,5 +388,6 @@ def compare_to_last_time(db, server="dali"):
     plt.xlabel("Increased counts")
     plt.ylabel("Increased size [GB]")
     plt.title(server + " " + str(times[-2])[:10] + " VS " + str(times[-1])[:10])
+    plt.grid()
 
     plt.show()

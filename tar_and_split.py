@@ -30,7 +30,7 @@ print('Finished tarring. Now splitting them into 100G chunks.')
 os.system(cmd_split)
 
 print('Already tarred and split. Now we delete the .tar.gz file!')
-os.system('rm temp_tar_dir')
+os.system('rm %s'%(temp_tar_dir))
 print('Delted .tar.gz file!')
 
 print(' ')
