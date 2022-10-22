@@ -204,7 +204,7 @@ def make_db(
     return db
 
 
-def track_user_history(db, user, server="dali", mode="size", show_last_n=20):
+def track_user_history(db, user, server="dali", mode="size", show_last_n=30):
     assert mode == "size" or mode == "counts"
 
     if mode == "size":
@@ -245,7 +245,7 @@ def track_user_history(db, user, server="dali", mode="size", show_last_n=20):
     plt.show()
 
 
-def track_server_history(db, server="dali", mode="size", show_last_n=20):
+def track_server_history(db, server="dali", mode="size", show_last_n=30):
     assert mode == "size" or mode == "counts"
 
     if mode == "size":
@@ -257,6 +257,9 @@ def track_server_history(db, server="dali", mode="size", show_last_n=20):
 
     # Assumed xenonnt will always be there
     times = db["xenonnt"]["time"]
+    times_argsort = times.argsort()
+    times.argsort()
+
     length = min(len(times), show_last_n)
     times = times[-length:]
     accumulated = np.zeros(length)
@@ -266,31 +269,31 @@ def track_server_history(db, server="dali", mode="size", show_last_n=20):
     users = list(db.keys())
     for user in users:
         user_doc = db[user]
-        user_times = user_doc["time"]
-
+        user_argsort =  user_doc["time"].argsort()
+        user_times = user_doc["time"][user_argsort]
+        user_total = user_doc["total" + mode_str][user_argsort]
         # This user has been long existing
         if len(user_times) == len(times):
-            server_doc["total" + mode_str] += user_doc["total" + mode_str]
+            server_doc["total" + mode_str][times_argsort] += user_total
             for cat in CATEGORIES:
-                server_doc[cat + mode_str] += user_doc[cat + mode_str]
+                user_cat_total = user_doc[cat + mode_str][user_argsort]
+                server_doc[cat + mode_str][times_argsort] += user_doc[cat + mode_str][user_argsort]
+
         else:
             for t in times:
                 if t in user_times:
-                    mask_time_server = server_doc["time"] == t
+                    mask_time_server = server_doc[times_argsort]["time"] == t
                     mask_time_user = user_doc["time"] == t
-                    server_doc[mask_time_server]["total" + mode_str] += user_doc[mask_time_user][
-                        "total" + mode_str
-                    ]
+                    server_doc[times_argsort][mask_time_server]["total" + mode_str] += user_total[mask_time_user]
                     for cat in CATEGORIES:
-                        server_doc[mask_time_server][cat + mode_str] += user_doc[mask_time_user][
-                            cat + mode_str
-                        ]
+                        user_cat_total = user_doc[cat + mode_str][user_argsort]
+                        server_doc[times_argsort][mask_time_server][cat + mode_str] += user_cat_total[user_argsort][mask_time_user]
 
-    result_times = server_doc["time"][-length:]
+    result_times = np.sort(server_doc["time"])[-length:]
     plt.figure(dpi=200)
     plt.fill_between(
-        x=np.sort(result_times),
-        y1=server_doc["total" + mode_str][-length:][np.argsort(result_times)],
+        x=result_times,
+        y1=server_doc["total" + mode_str][times_argsort][-length:],
         label="others",
         color="k",
         alpha=0.7,
@@ -298,12 +301,12 @@ def track_server_history(db, server="dali", mode="size", show_last_n=20):
 
     for cat in CATEGORIES:
         plt.fill_between(
-            x=np.sort(result_times),
-            y1=accumulated[np.argsort(result_times)],
-            y2=accumulated + server_doc[cat + mode_str][-length:][np.argsort(result_times)],
+            x=result_times,
+            y1=accumulated,
+            y2=accumulated + server_doc[cat + mode_str][times_argsort][-length:],
             label=cat,
         )
-        accumulated += server_doc[cat + mode_str][-length:]
+        accumulated += server_doc[cat + mode_str][times_argsort][-length:]
 
     plt.legend(loc="lower left")
     plt.title(server)
