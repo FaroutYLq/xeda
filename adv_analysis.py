@@ -209,7 +209,7 @@ def track_user_history(db, user, server="dali", mode="size", show_last_n=30):
 
     if mode == "size":
         mode_str = "_tb"
-        ylabel = "Size [GB]"
+        ylabel = "Size [TB]"
     elif mode == "counts":
         mode_str = "_n"
         ylabel = "Counts"
@@ -217,30 +217,32 @@ def track_user_history(db, user, server="dali", mode="size", show_last_n=30):
     user_docs = db[user]
     length = min(len(user_docs["total_tb"]), show_last_n)
     accumulated = np.zeros(length)
-    result_times = user_docs["time"][-length:]
+    times_argsort = user_docs["time"].argsort()
+    result_times = np.sort(user_docs["time"])[-length:]
 
     plt.figure(dpi=200)
     plt.fill_between(
-        x=np.sort(result_times),
+        x=result_times,
         y1=np.zeros(length),
-        y2=1024 * user_docs["total" + mode_str][-length:][np.argsort(result_times)],
+        y2=user_docs["total" + mode_str][times_argsort][-length:],
         label="others",
         color="k",
         alpha=0.7,
     )
     for cat in CATEGORIES:
         plt.fill_between(
-            x=np.sort(result_times),
-            y1=1024 * accumulated[np.argsort(result_times)],
-            y2=1024 * (accumulated + user_docs[cat + mode_str][-length:][np.argsort(result_times)]),
+            x=result_times,
+            y1=accumulated,
+            y2=(accumulated + user_docs[cat + mode_str][times_argsort][-length:]),
             label=cat,
         )
-        accumulated += user_docs[cat + mode_str][-length:]
+        accumulated += user_docs[cat + mode_str][times_argsort][-length:]
 
     plt.legend(loc="lower left")
     plt.title("%s@%s" % (user, server))
     plt.ylabel(ylabel)
     plt.xticks(rotation=45)
+    plt.grid()
 
     plt.show()
 
@@ -305,7 +307,7 @@ def track_server_history(db, server="dali", mode="size", show_last_n=30):
     for cat in CATEGORIES:
         plt.fill_between(
             x=result_times,
-            y1=accumulated,
+            y1=accumulated[-length:],
             y2=accumulated + server_doc[cat + mode_str][times_argsort][-length:],
             label=cat,
         )
