@@ -282,12 +282,12 @@ def track_server_history(db, server="dali", mode="size", show_last_n=30):
         else:
             for t in times:
                 if t in user_times:
-                    mask_time_server = server_doc[times_argsort]["time"] == t
-                    mask_time_user = user_doc["time"] == t
-                    server_doc[times_argsort][mask_time_server]["total" + mode_str] += user_total[mask_time_user]
+                    i_time_server = np.where(server_doc["time"] == t)[0]
+                    i_time_user = np.where(user_doc[user_argsort]["time"] == t)[0]
+                    server_doc["total" + mode_str][i_time_server] += user_total[i_time_user]
                     for cat in CATEGORIES:
-                        user_cat_total = user_doc[cat + mode_str][user_argsort]
-                        server_doc[times_argsort][mask_time_server][cat + mode_str] += user_cat_total[user_argsort][mask_time_user]
+                        user_cat_total = user_doc[cat + mode_str][i_time_user]
+                        server_doc[cat + mode_str][i_time_server] += user_cat_total
 
     result_times = np.sort(server_doc["time"])[-length:]
     plt.figure(dpi=200)
@@ -298,6 +298,9 @@ def track_server_history(db, server="dali", mode="size", show_last_n=30):
         color="k",
         alpha=0.7,
     )
+
+    plt.grid()
+    plt.axhline(LIMIT_TB_DICT[server], color='b')
 
     for cat in CATEGORIES:
         plt.fill_between(
