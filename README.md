@@ -89,3 +89,6 @@ adv_analysis.compare_to_last_time(db, server="dali")
 ## Tar scripts
 `batch_job_tar.py` submits jobs running `tar_and_split.py`, which tars and com and split the target directory or file into
 ```
+python batch_job_tar.py /dali/lgrandi/yuanlq/
+```
+will tar and split `/dali/lgrandi/yuanlq/` and put output files in `/dali/lgrandi/yuanlq_relocated/`.
