@@ -85,3 +85,7 @@ adv_analysis.track_user_history(db, user='xenonnt', server='dali', mode='size', 
 # Alarm if some users used significantly more compared to last scan
 adv_analysis.compare_to_last_time(db, server="dali")
 ```
+
+## Tar scripts
+`batch_job_tar.py` submits jobs running `tar_and_split.py`, which tars and com and split the target directory or file into
+```
