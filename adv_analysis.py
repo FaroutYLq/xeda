@@ -258,7 +258,7 @@ def track_server_history(db, server="dali", mode="size", show_last_n=30):
     times = db["xenonnt"]["time"]
     times_argsort = times.argsort()
 
-    length = max(len(times), show_last_n)
+    length = len(times)
     times = times[-length:]
     accumulated = np.zeros(length)
     server_doc = np.zeros_like(db["xenonnt"])
