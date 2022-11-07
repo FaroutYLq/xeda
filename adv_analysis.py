@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from os import listdir
-from datetime import datetime
+import datetime
 from analysis import CATEGORIES
 
 
@@ -15,7 +15,7 @@ ALARM_DELTA_TB_DICT = {"project2": 0.2, "dali": 0.4}
 ALARM_DELTA_FILES_DICT = {"project2": 50000, "dali": 10000}
 
 DB_DTYPE = [
-    (("datetime of the scan", "time"), datetime),
+    (("datetime of the scan", "time"), datetime.datetime),
     (("total size in TB unit", "total_tb"), np.float32),
     (("total file counts", "total_n"), np.int32),
     (("rawdata size in TB unit", "rawdata_tb"), np.float32),
@@ -181,7 +181,7 @@ def make_db(
     db = {}
 
     for file_oi in files_oi:
-        time = datetime(
+        time = datetime.datetime(
             int(file_oi[-12:-8]),
             clean_up_date(file_oi[-8:-6]),
             clean_up_date(file_oi[-6:-4]),
@@ -256,9 +256,8 @@ def track_server_history(db, server="dali", mode="size", show_last_n=30):
     # Assumed xenonnt will always be there
     times = db["xenonnt"]["time"]
     times_argsort = times.argsort()
-    times.argsort()
 
-    length = min(len(times), show_last_n)
+    length = max(len(times), show_last_n)
     times = times[-length:]
     accumulated = np.zeros(length)
     server_doc = np.zeros_like(db["xenonnt"])
@@ -313,11 +312,14 @@ def track_server_history(db, server="dali", mode="size", show_last_n=30):
         )
         accumulated += server_doc[cat + mode_str][times_argsort][-length:]
 
+    today = datetime.date.today()
+    starting_from = today - datetime.timedelta(days=show_last_n)
+    plt.xlim(left = starting_from, right = today)
+
     plt.legend(loc="lower left")
     plt.title(server)
     plt.ylabel(ylabel)
     plt.xticks(rotation=45)
-
     plt.show()
 
 
