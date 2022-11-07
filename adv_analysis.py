@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from os import listdir
 import datetime
+from copy import deepcopy
 from analysis import CATEGORIES
 
 
@@ -324,8 +325,9 @@ def track_server_history(db, server="dali", mode="size", show_last_n=30):
 
 
 def compare_to_last_time(db, server="dali"):
-    # Assumed xenonnt will always be there
+    db = deepcopy(db)
 
+    # Assumed xenonnt will always be there
     times = db["xenonnt"]["time"][-2:]
     times.sort()
     times = times[-2:]
