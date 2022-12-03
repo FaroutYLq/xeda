@@ -12,8 +12,8 @@ ALARM_TB_DICT = {"project2": 1, "dali": 2}
 ALARM_FILES_DICT = {"project2": 100000, "dali": 200000}
 ALARM_SPECIFIC_TB_DICT = {"project2": 0.5, "dali": 1}
 ALARM_SPECIFIC_FILES_DICT = {"project2": 50000, "dali": 100000}
-ALARM_DELTA_TB_DICT = {"project2": 0.2, "dali": 0.4}
-ALARM_DELTA_FILES_DICT = {"project2": 50000, "dali": 10000}
+ALARM_DELTA_TB_DICT = {"project2": 0.1, "dali": 0.1}
+ALARM_DELTA_FILES_DICT = {"project2": 10000, "dali": 10000}
 
 DB_DTYPE = [
     (("datetime of the scan", "time"), datetime.datetime),
