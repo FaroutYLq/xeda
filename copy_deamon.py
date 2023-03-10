@@ -11,6 +11,8 @@ dtypes = ["peak_basics", "peak_positions_mlp", "lone_hits", "pulse_counts", "mer
           "events_mv", "events_nv", "afterpulses"]
 
 while True:
+    # Get online
+    st = cutax.contexts.xenonnt_online(output_folder='/project2/lgrandi/xenonnt/processed')
     runs = st.select_runs(available='event_basics').name[:5]
     for run in strax.utils.tqdm(runs):
         for dtype in dtypes:
@@ -19,6 +21,6 @@ while True:
             except:
                 print(dtype+' for run '+run+' is not available or already exists in destination.')
 
-        # sleep for half an hour.        
-        sleep(1800)
+    # sleep for half an hour.        
+    sleep(1800)
 
