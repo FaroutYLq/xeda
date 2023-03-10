@@ -92,3 +92,9 @@ adv_analysis.compare_to_last_time(db, server="dali")
 python batch_job_tar.py /dali/lgrandi/yuanlq/
 ```
 will tar and split `/dali/lgrandi/yuanlq/` and put output files in `/dali/lgrandi/yuanlq_relocated/`.
+
+## Copy Pipeline
+Copying data from dali storage to midway2 storage. Just do this in a screen session:
+```
+python copy_deamon.py
+```
