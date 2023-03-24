@@ -23,7 +23,7 @@ while True:
                 print(dtype+' for run '+run+' is not available or already exists in destination.')
     # Get offline radon
     st = cutax.contexts.xenonnt_offline(output_folder='/project2/lgrandi/xenonnt/processed')
-    runs = st.select_runs(run_mode=('tpc_radon', 'tpc_radon_hev'), available='event_basics')
+    runs = st.select_runs(run_mode=('tpc_radon', 'tpc_radon_hev','tpc_kr83m'), available='event_basics')
     for run in strax.utils.tqdm(runs):
         for dtype in dtypes:
             try:
