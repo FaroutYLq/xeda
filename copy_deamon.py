@@ -8,7 +8,7 @@ st = cutax.contexts.xenonnt_online(output_folder='/project2/lgrandi/xenonnt/proc
 dtypes = ["peak_basics",  
           "peaklet_classification", "peaklet_classification_he", "veto_regions", "event_pattern_fit", "event_w_bayes_class", 
           "event_basics", "events", "event_info",  "peak_proximity", "peak_positions", "peak_positions_mlp", 
-          "peak_positions_cnn", "peak_positions_gcn", "events_mv", "events_nv"] 
+          "peak_positions_cnn", "peak_positions_gcn", "events_mv", "events_nv", "event_positions_nv"] 
 
 
 while True:
@@ -24,7 +24,7 @@ while True:
     # Get offline radon
     st = cutax.contexts.xenonnt_offline(output_folder='/project2/lgrandi/xenonnt/processed')
     runs = st.select_runs(run_mode=('tpc_radon', 'tpc_radon_hev','tpc_kr83m'), available='event_basics')
-    for run in strax.utils.tqdm(runs):
+    for run in strax.utils.tqdm(runs.name):
         for dtype in dtypes:
             try:
                 st.copy_to_frontend(run, dtype)
