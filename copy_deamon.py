@@ -5,7 +5,7 @@ import time
 
 st = cutax.contexts.xenonnt_online(output_folder='/project2/lgrandi/xenonnt/processed')
 
-dtypes = ["peak_basics",  
+dtypes = ["peak_basics", "raw_records_aqmon","distinct_channels", 
           "peaklet_classification", "peaklet_classification_he", "veto_regions", "event_pattern_fit", "event_w_bayes_class", 
           "event_basics", "events", "event_info",  "peak_proximity", "peak_positions", "peak_positions_mlp", 
           "peak_positions_cnn", "peak_positions_gcn", "events_mv", "events_nv", "event_positions_nv"] 
