@@ -14,7 +14,7 @@ dtypes = ["peak_basics", "raw_records_aqmon","distinct_channels",
 while True:
     # Get online
     st = cutax.contexts.xenonnt_online(output_folder='/project2/lgrandi/xenonnt/processed')
-    runs = st.select_runs(available='event_basics').name[:1000]
+    runs = st.select_runs(available='event_basics').name[:50]
     for run in strax.utils.tqdm(runs):
         for dtype in dtypes:
             try:
