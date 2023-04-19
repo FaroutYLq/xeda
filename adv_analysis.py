@@ -11,7 +11,7 @@ LIMIT_FILES_DICT = {"project2": 5258000, "dali": 41357600}
 ALARM_TB_DICT = {"project2": 1, "dali": 2}
 ALARM_FILES_DICT = {"project2": 100000, "dali": 200000}
 ALARM_SPECIFIC_TB_DICT = {"project2": 0.1, "dali": 0.2}
-ALARM_SPECIFIC_FILES_DICT = {"project2": 50000, "dali": 100000}
+ALARM_SPECIFIC_FILES_DICT = {"project2": 100000, "dali": 150000}
 ALARM_DELTA_TB_DICT = {"project2": 0.1, "dali": 0.1}
 ALARM_DELTA_FILES_DICT = {"project2": 10000, "dali": 10000}
 
