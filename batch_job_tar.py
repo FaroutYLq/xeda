@@ -7,11 +7,16 @@ from utilix.batchq import *
 
 print(utilix.__file__)
 
+QOS = {"dali": "dali", "project2": "xenon1t", "project": "xenon1t"}
+PARTITION = {"dali": "dali", "project2": "xenon1t", "project": "xenon1t"}
+
 _, absolute_dir = sys.argv
 assert absolute_dir[0] == "/", "Please input an absolute directory!"
-assert absolute_dir.split("/")[1] in (
+parent_dir = absolute_dir.split("/")[1]
+assert parent_dir in (
     "dali",
     "project2",
+    "project",
 ), "Now this script only supports dali or project2."
 
 
@@ -61,8 +66,8 @@ class Submit(object):
             jobstring,
             log="/home/yuanlq/.tmp_job_submission/tar_%s_%s.log"
             % (loop_item.split("/")[1], loop_item.split("/")[3]),
-            partition="dali",
-            qos="dali",
+            partition=PARTITION[parent_dir],
+            qos=QOS[parent_dir],
             account="pi-lgrandi",
             jobname=jobname,
             delete_file=True,
