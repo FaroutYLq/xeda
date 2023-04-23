@@ -7,8 +7,9 @@ from utilix.batchq import *
 
 print(utilix.__file__)
 
-TO_SCAN = ["/dali/lgrandi/", "/project2/lgrandi/"]
-
+TO_SCAN = ["/dali/lgrandi/", "/project2/lgrandi/", "/project/lgrandi/"]
+QOS = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "xenon1t", "/project/lgrandi/": "xenon1t"}
+PARTITION = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "xenon1t", "/project/lgrandi/": "xenon1t"}
 
 class Submit(object):
     """
@@ -57,8 +58,8 @@ class Submit(object):
             jobstring,
             log="/home/yuanlq/.tmp_job_submission/scan_%s.log"
             % (loop_item.split("/")[1]),
-            partition="dali",
-            qos="dali",
+            partition=PARTITION[loop_item],
+            qos=QOS[loop_item],
             account="pi-lgrandi",
             jobname=jobname,
             delete_file=True,
