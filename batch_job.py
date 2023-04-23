@@ -48,7 +48,7 @@ class Submit(object):
         scan_within = loop_item
         # Modify here for the script to run
         jobstring = (
-            "python /home/yuanlq/software/xeda/xeda.py -t 500GB -o '/project2/lgrandi/yuanlq/shared/disk_usage/' -d '[xenonnt, xenon1t]' -s %s"
+            "python /home/yuanlq/software/xeda/xeda.py -t 500GB -o '/project2/lgrandi/yuanlq/shared/disk_usage/' -d '[xenonnt]' -s %s"
             % (loop_item)
         )
         print(jobstring)
