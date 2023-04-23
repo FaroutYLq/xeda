@@ -7,7 +7,7 @@ from utilix.batchq import *
 
 print(utilix.__file__)
 
-TO_SCAN = ["/dali/lgrandi/", "/project2/lgrandi/", "/project/lgrandi/"]
+TO_SCAN = ["/project/lgrandi/", "/project2/lgrandi/", "/dali/lgrandi/"]
 QOS = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "xenon1t", "/project/lgrandi/": "xenon1t"}
 PARTITION = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "xenon1t", "/project/lgrandi/": "xenon1t"}
 
