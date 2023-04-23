@@ -184,6 +184,12 @@ def du(args_dict):
         % (args_dict["scan_within"])
     )
 
+    # Sanity check
+    print("Doing Sanity check if we have access there:")
+    command = "ls " + args_dict["scan_within"] + "yuanlq"
+    print(os.system(command))
+    print("Please check if that makes sense to you.")
+
     # Organizing
     command = "du -la " + args_dict["scan_within"] + ">" + args_dict["input_dir"]
     print("Running the following command: ")
