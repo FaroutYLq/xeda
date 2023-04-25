@@ -10,6 +10,16 @@ print(utilix.__file__)
 TO_SCAN = ["/project/lgrandi/", "/project2/lgrandi/", "/dali/lgrandi/"]
 QOS = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "xenon1t", "/project/lgrandi/": "xenon1t"}
 PARTITION = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "xenon1t", "/project/lgrandi/": "xenon1t"}
+OUTPUT_DIR = {
+    "/dali/lgrandi/": "/dali/lgrandi/yuanlq/shared/disk_usage/",
+    "/project2/lgrandi/": "/project2/lgrandi/yuanlq/shared/disk_usage/",
+    "/project/lgrandi/": "/project2/lgrandi/yuanlq/shared/disk_usage/",
+}
+LOG_DIR = {
+    "/dali/lgrandi/": "/dali/lgrandi/yuanlq/logs/",
+    "/project2/lgrandi/": "/home/yuanlq/.tmp_job_submission/",
+    "/project/lgrandi/": "/home/yuanlq/.tmp_job_submission/",
+}
 
 class Submit(object):
     """
@@ -45,19 +55,18 @@ class Submit(object):
 
     def _submit_single(self, loop_index, loop_item):
         jobname = "scan_%s" % (loop_item.split("/")[1])
-        scan_within = loop_item
         # Modify here for the script to run
         jobstring = (
-            "python /home/yuanlq/software/xeda/xeda.py -t 500GB -o '/project2/lgrandi/yuanlq/shared/disk_usage/' -d '[xenonnt]' -s %s"
-            % (loop_item)
+            "python /home/yuanlq/software/xeda/xeda.py -t 500GB -o %s -d '[xenonnt]' -s %s"
+            % (OUTPUT_DIR[loop_item], loop_item)
         )
         print(jobstring)
 
         # Modify here for the log name
         utilix.batchq.submit_job(
             jobstring,
-            log="/home/yuanlq/.tmp_job_submission/scan_%s.log"
-            % (loop_item.split("/")[1]),
+            log="%sscan_%s.log"
+            % (LOG_DIR[loop_item], loop_item.split("/")[1]),
             partition=PARTITION[loop_item],
             qos=QOS[loop_item],
             account="pi-lgrandi",
