@@ -4,10 +4,11 @@ import os, shlex
 import sys
 import utilix
 from utilix.batchq import *
+import getpass
 
 print(utilix.__file__)
 
-_, scope = sys.args
+_, scope = sys.argv
 
 TO_SCAN = {
     'all': ["/project/lgrandi/", "/project2/lgrandi/", "/dali/lgrandi/"],
@@ -76,6 +77,7 @@ class Submit(object):
             partition=PARTITION[loop_item],
             qos=QOS[loop_item],
             account="pi-lgrandi",
+            bind=['/project2/lgrandi/xenonnt/dali:/dali', '/project2', '/project', '/scratch/midway2/%s'%(getpass.getuser()), '/scratch/midway3/%s'%(getpass.getuser())],
             jobname=jobname,
             delete_file=True,
             dry_run=False,
