@@ -1,4 +1,3 @@
-module load singularity
-singularity shell --bind /dali /dali/lgrandi/xenonnt/singularity-images/xenonnt-development.simg
+. /cvmfs/xenon.opensciencegrid.org/releases/nT/development/setup.sh 
 python /home/yuanlq/software/xeda/batch_job.py dali
 exit
