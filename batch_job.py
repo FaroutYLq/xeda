@@ -7,7 +7,13 @@ from utilix.batchq import *
 
 print(utilix.__file__)
 
-TO_SCAN = ["/project/lgrandi/", "/project2/lgrandi/", "/dali/lgrandi/"]
+_, scope = sys.args
+
+TO_SCAN = {
+    'all': ["/project/lgrandi/", "/project2/lgrandi/", "/dali/lgrandi/"],
+    'dali': ["/dali/lgrandi/"],
+    'midway': ["/project/lgrandi/", "/project2/lgrandi/"],
+    }
 QOS = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "xenon1t", "/project/lgrandi/": "xenon1t"}
 PARTITION = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "xenon1t", "/project/lgrandi/": "xenon1t"}
 OUTPUT_DIR = {
@@ -80,5 +86,5 @@ class Submit(object):
 
 
 p = Submit()
-loop_over = TO_SCAN
+loop_over = TO_SCAN[scope]
 p.execute(loop_over=loop_over, max_num_submit=5, nmax=10000)
