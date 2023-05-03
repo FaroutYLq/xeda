@@ -60,7 +60,7 @@ class Submit(object):
         jobNum = int(os.popen(cmd).read())
         return jobNum - 1
 
-    def _submit_single(self, loop_index, loop_item):
+    def _submit_single(self, loop_item):
         jobname = "scan_%s" % (loop_item.split("/")[1])
         # Modify here for the script to run
         jobstring = (
