@@ -49,7 +49,7 @@ class Submit(object):
         index = _start
         while index < len(self.loop_over) and index < nmax:
             if self.working_job() < self.max_num_submit:
-                self._submit_single(loop_index=index, loop_item=self.loop_over[index])
+                self._submit_single(loop_item=self.loop_over[index])
 
                 time.sleep(1.0)
                 index += 1
@@ -60,7 +60,7 @@ class Submit(object):
         jobNum = int(os.popen(cmd).read())
         return jobNum - 1
 
-    def _submit_single(self, loop_index, loop_item):
+    def _submit_single(self, loop_item):
         jobname = "scan_%s" % (loop_item.split("/")[1])
         # Modify here for the script to run
         jobstring = (
@@ -82,6 +82,7 @@ class Submit(object):
             delete_file=True,
             dry_run=False,
             mem_per_cpu=25000,
+            exclude_nodes='dali0{28..29}',
             container="xenonnt-development.simg",
             cpus_per_task=1,
         )

@@ -199,9 +199,9 @@ class DUAnalyzer:
         depth = len(scan_within_split) - 1
 
         print("depth = %s" % (depth))
-        print("eg paths: %s" % (paths[0]))
-        print("eg splits: %s" % (paths[0].split("/")))
-        print("eg splits after selection: %s" % (paths[0].split("/")[depth - 1 :]))
+        #print("eg paths: %s" % (paths[0]))
+        #print("eg splits: %s" % (paths[0].split("/")))
+        #print("eg splits after selection: %s" % (paths[0].split("/")[depth - 1 :]))
 
         for i, p in tqdm(enumerate(paths)):
             splits = p.split("/")

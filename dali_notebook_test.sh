@@ -6,7 +6,7 @@ nodes=(dali001 dali003 dali005 dali006 dali007 dali008 dali009 dali010 dali011 d
 # Define the function to run the command on each node
 function run_command_on_node() {
     node=$1
-    output=$(djup --node $node --force_new --ram 2000)  
+    output=$(djup --node $node --force_new --ram 2000 --notebook_dir /dali/lgrandi/yuanlq/xenon/)  
     if [[ $output == *"Happy strax analysis,"* ]]; then
         echo "$node succeeded"
     else
