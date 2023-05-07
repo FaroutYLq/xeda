@@ -82,6 +82,7 @@ class Submit(object):
             delete_file=True,
             dry_run=False,
             mem_per_cpu=25000,
+            exclude_nodes='dali0{28..29}',
             container="xenonnt-development.simg",
             cpus_per_task=1,
         )
