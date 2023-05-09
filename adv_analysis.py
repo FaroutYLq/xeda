@@ -8,7 +8,7 @@ from analysis import CATEGORIES
 
 LIMIT_TB_DICT = {"project2": 31.98, "dali": 266.00, "project": 40.00}
 LIMIT_FILES_DICT = {"project2": 5258000, "dali": 41357600, "project": 6644000}
-ALARM_TB_DICT = {"project2": 1, "dali": 2, "project": 1}
+ALARM_TB_DICT = {"project2": 0.1, "dali": 0.2, "project": 0.1}
 ALARM_FILES_DICT = {"project2": 100000, "dali": 200000, "project": 100000}
 ALARM_SPECIFIC_TB_DICT = {"project2": 0.1, "dali": 0.2, "project": 0.1}
 ALARM_SPECIFIC_FILES_DICT = {"project2": 100000, "dali": 150000, "project": 100000}
