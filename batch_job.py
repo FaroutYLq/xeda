@@ -28,6 +28,11 @@ LOG_DIR = {
     "/project2/lgrandi/": "/home/yuanlq/.tmp_job_submission/",
     "/project/lgrandi/": "/home/yuanlq/.tmp_job_submission/",
 }
+MEM = {
+    "/dali/lgrandi/": 25000,
+    "/project2/lgrandi/": 10000,
+    "/project/lgrandi/": 15000,
+}
 
 class Submit(object):
     """
@@ -82,7 +87,8 @@ class Submit(object):
             jobname=jobname,
             delete_file=True,
             dry_run=False,
-            mem_per_cpu=25000,
+            mem_per_cpu=MEM[loop_item],
+            exclude_nodes='midway2-0020', # for test
             #exclude_nodes='dali0{28..29}',
             container="xenonnt-development.simg",
             cpus_per_task=1,
