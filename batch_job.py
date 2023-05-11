@@ -13,10 +13,11 @@ _, scope = sys.argv
 TO_SCAN = {
     'all': ["/project/lgrandi/", "/project2/lgrandi/", "/dali/lgrandi/"],
     'dali': ["/dali/lgrandi/"],
-    'midway': ["/project/lgrandi/", "/project2/lgrandi/"],
+    'midway2': ["/project2/lgrandi/"],
+    "midway3": ["/project/lgrandi/"]
     }
-QOS = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "xenon1t", "/project/lgrandi/": "xenon1t"}
-PARTITION = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "xenon1t", "/project/lgrandi/": "xenon1t"}
+QOS = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "xenon1t", "/project/lgrandi/": "lgrandi"}
+PARTITION = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "xenon1t", "/project/lgrandi/": "lgrandi"}
 OUTPUT_DIR = {
     "/dali/lgrandi/": "/dali/lgrandi/yuanlq/shared/disk_usage/",
     "/project2/lgrandi/": "/project2/lgrandi/yuanlq/shared/disk_usage/",
@@ -82,7 +83,7 @@ class Submit(object):
             delete_file=True,
             dry_run=False,
             mem_per_cpu=25000,
-            exclude_nodes='dali0{28..29}',
+            #exclude_nodes='dali0{28..29}',
             container="xenonnt-development.simg",
             cpus_per_task=1,
         )
