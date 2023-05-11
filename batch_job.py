@@ -16,7 +16,7 @@ TO_SCAN = {
     'midway2': ["/project2/lgrandi/"],
     "midway3": ["/project/lgrandi/"]
     }
-QOS = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "xenon1t", "/project/lgrandi/": "lgrandi"}
+QOS = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "broadwl", "/project/lgrandi/": "lgrandi"}
 PARTITION = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "broadwl", "/project/lgrandi/": "lgrandi"}
 OUTPUT_DIR = {
     "/dali/lgrandi/": "/dali/lgrandi/yuanlq/shared/disk_usage/",
