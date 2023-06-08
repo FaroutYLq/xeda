@@ -27,7 +27,7 @@ for run in strax.utils.tqdm(runs.name):
 			except:
 				name = st_midway.key_for(run, dtype) 
 				print(name,'is corrupted! Removing it...')
-				os.system('rm -rf '+basedir+name)
+				os.system('rm -rf '+basedir+str(name))
 				print('Removed', name)
 				print('Now we want to redo copy_to_frontend')
 				st.copy_to_frontend(run, dtype)
