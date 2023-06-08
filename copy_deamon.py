@@ -13,17 +13,17 @@ dtypes = ["peak_basics", "raw_records_aqmon","distinct_channels", "veto_interval
 
 while True:
     # Get online
-    st = cutax.contexts.xenonnt_online(output_folder='/project2/lgrandi/xenonnt/processed')
-    runs = st.select_runs(available='event_basics').name[:500]
-    for run in strax.utils.tqdm(runs):
-        for dtype in dtypes:
-            try:
-                st.copy_to_frontend(run, dtype)
-            except:
-                print(dtype+' for run '+run+' is not available or already exists in destination.')
-    # Get offline radon
+    #st = cutax.contexts.xenonnt_online(output_folder='/project2/lgrandi/xenonnt/processed')
+    #runs = st.select_runs(available='event_basics').name[:500]
+    #for run in strax.utils.tqdm(runs):
+    #    for dtype in dtypes:
+    #        try:
+    #            st.copy_to_frontend(run, dtype)
+    #        except:
+    #            print(dtype+' for run '+run+' is not available or already exists in destination.')
+    # Get offline
     st = cutax.contexts.xenonnt_offline(output_folder='/project2/lgrandi/xenonnt/processed')
-    runs = st.select_runs(run_mode=('*ambe*','tpc_radon', 'tpc_radon_hev','tpc_kr83m'), available='event_basics')
+    runs = st.select_runs(available='event_basics')
     for run in strax.utils.tqdm(runs.name):
         for dtype in dtypes:
             try:
