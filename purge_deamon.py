@@ -30,5 +30,9 @@ for run in strax.utils.tqdm(runs.name):
 				os.system('rm -rf '+basedir+str(name))
 				print('Removed', name)
 				print('Now we want to redo copy_to_frontend')
-				st.copy_to_frontend(run, dtype)
-				print('Copied', name)
+				try:
+					st.copy_to_frontend(run, dtype)
+					print('Copied', name, dtype)
+				except:
+					print('Could not copy', name, dtype)
+					pass
