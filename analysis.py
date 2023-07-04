@@ -206,7 +206,7 @@ class DUAnalyzer:
         for i, p in tqdm(enumerate(paths)):
             splits = p.split("/")
             if (
-                splits[0] != "dali" and splits[0] != "project2" and splits[0] != "home"
+                splits[0] != "dali" and splits[0] != "project" and splits[0] != "project2" and splits[0] != "home"
             ):  # in case you scaned using relative path...
                 splits = splits[depth - 2 :]
             else:
