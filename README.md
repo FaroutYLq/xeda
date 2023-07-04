@@ -93,8 +93,5 @@ python batch_job_tar.py /dali/lgrandi/yuanlq/
 ```
 will tar and split `/dali/lgrandi/yuanlq/` and put output files in `/dali/lgrandi/yuanlq_relocated/`.
 
-## Copy Pipeline
-Copying data from dali storage to midway2 storage. Just do this in a screen session:
-```
-python copy_deamon.py
-```
+## Deletion
+This is an interface to `rucio`. Still in construction.
