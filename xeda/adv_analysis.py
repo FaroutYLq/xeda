@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from os import listdir
 import datetime
 from copy import deepcopy
-from analysis import CATEGORIES
+from .analysis import CATEGORIES
 
 
 LIMIT_TB_DICT = {"project2": 31.98, "dali": 266.00, "project": 40.00}
