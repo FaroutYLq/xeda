@@ -13,7 +13,6 @@ DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 SCRIPT_PATH = os.path.join(DIR_PATH, "../xeda/xeda.py")
 
 TO_SCAN = {
-    'all': ["/project/lgrandi/", "/project2/lgrandi/", "/dali/lgrandi/"],
     'dali': ["/dali/lgrandi/"],
     'midway2': ["/project2/lgrandi/"],
     "midway3": ["/project/lgrandi/"]
@@ -99,7 +98,7 @@ class Submit(object):
 
 print("Weclome to XEDA disk scanning job submission!")
 print("Your job script directory is: %s" % (SCRIPT_PATH))
-print("Your job log directory is: %s" % (LOG_DIR[scope]))
+print("Your job log directory is: %s" % (LOG_DIR[TO_SCAN[scope]]))
 
 p = Submit()
 loop_over = TO_SCAN[scope]
