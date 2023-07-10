@@ -187,6 +187,7 @@ def du(args_dict):
     # Sanity check
     print("Doing Sanity check if we have access there:")
     command = "ls " + args_dict["scan_within"] + "yuanlq"
+    print("Running this command:", command)
     print(os.system(command))
     print("Please check if that makes sense to you.")
 
