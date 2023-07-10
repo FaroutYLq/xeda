@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --time=00:05:00
-#SBATCH --output=/home/yuanlq/.tmp_job_submission/cron_xeda.log
+#SBATCH --output=/home/$USER/.tmp_job_submission/cron_xeda.log
 #SBATCH --open-mode=append
 #SBATCH --account=cron-account
 #SBATCH --partition=cron
