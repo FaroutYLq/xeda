@@ -13,7 +13,6 @@ DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 SCRIPT_PATH = os.path.join(DIR_PATH, "../xeda/xeda.py")
 
 TO_SCAN = {
-    'all': ["/project/lgrandi/", "/project2/lgrandi/", "/dali/lgrandi/"],
     'dali': ["/dali/lgrandi/"],
     'midway2': ["/project2/lgrandi/"],
     "midway3": ["/project/lgrandi/"]
