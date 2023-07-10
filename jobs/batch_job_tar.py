@@ -6,12 +6,10 @@ import utilix
 from utilix.batchq import *
 import os
 
-print(utilix.__file__)
 
 USER = os.environ['USER']
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 SCRIPT_PATH = os.path.join(DIR_PATH, "../xeda/tar_and_split.py")
-
 
 QOS = {"dali": "dali", "project2": "xenon1t", "project": "xenon1t"}
 PARTITION = {"dali": "dali", "project2": "xenon1t", "project": "xenon1t"}
