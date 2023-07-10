@@ -13,7 +13,8 @@ SCHEDULE='15 3 * * *'
 
 # Load environment and submit scan jobs.
 . submit_xeda_dali.sh
-. submit_xeda_midway.sh
+. submit_xeda_midway2.sh
+. submit_xeda_midway3.sh
 
 # This schedules the next run.
 sbatch --quiet --begin=$(date -d '+24 hour' '+%FT%T') cron_xeda.sbatch
