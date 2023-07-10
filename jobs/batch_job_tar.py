@@ -4,8 +4,12 @@ import os, shlex
 import sys
 import utilix
 from utilix.batchq import *
+import os
 
-print(utilix.__file__)
+
+USER = os.environ['USER']
+DIR_PATH = os.path.dirname(os.path.realpath(__file__))
+SCRIPT_PATH = os.path.join(DIR_PATH, "../xeda/tar_and_split.py")
 
 QOS = {"dali": "dali", "project2": "xenon1t", "project": "xenon1t"}
 PARTITION = {"dali": "dali", "project2": "xenon1t", "project": "xenon1t"}
@@ -48,14 +52,15 @@ class Submit(object):
 
     # check my jobs
     def working_job(self):
-        cmd = "squeue --user={user} | wc -l".format(user="yuanlq")
+        cmd = "squeue --user={user} | wc -l".format(user=USER)
         jobNum = int(os.popen(cmd).read())
         return jobNum - 1
 
     def _submit_single(self, loop_index, loop_item):
         jobname = "tar_%s" % (loop_item)
         # Modify here for the script to run
-        jobstring = "python /home/yuanlq/software/xeda/xeda/tar_and_split.py %s" % (
+        jobstring = "python %s %s" % (
+            SCRIPT_PATH,
             loop_item
         )
         print("Running this job string: ")
@@ -64,8 +69,8 @@ class Submit(object):
         # Modify here for the log name
         utilix.batchq.submit_job(
             jobstring,
-            log="/home/yuanlq/.tmp_job_submission/tar_%s_%s.log"
-            % (loop_item.split("/")[1], loop_item.split("/")[3]),
+            log="/home/%s/.tmp_job_submission/tar_%s_%s.log"
+            % (USER, loop_item.split("/")[1], loop_item.split("/")[3]),
             partition=PARTITION[parent_dir],
             qos=QOS[parent_dir],
             account="pi-lgrandi",
@@ -77,6 +82,10 @@ class Submit(object):
             cpus_per_task=1,
         )
 
+
+print("Weclome to XEDA disk scanning job submission!")
+print("Your job script directory is: %s" % (SCRIPT_PATH))
+print("Your job log directory is: %s" % (LOG_DIR[scope]))
 
 p = Submit()
 loop_over = [absolute_dir]
