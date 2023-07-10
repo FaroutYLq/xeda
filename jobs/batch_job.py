@@ -6,9 +6,11 @@ import utilix
 from utilix.batchq import *
 import getpass
 
-print(utilix.__file__)
-
 _, scope = sys.argv
+
+USER = os.environ['USER']
+DIR_PATH = os.path.dirname(os.path.realpath(__file__))
+SCRIPT_PATH = os.path.join(DIR_PATH, "../xeda/xeda.py")
 
 TO_SCAN = {
     'all': ["/project/lgrandi/", "/project2/lgrandi/", "/dali/lgrandi/"],
@@ -25,8 +27,8 @@ OUTPUT_DIR = {
 }
 LOG_DIR = {
     "/dali/lgrandi/": "/dali/lgrandi/yuanlq/logs/",
-    "/project2/lgrandi/": "/home/yuanlq/.tmp_job_submission/",
-    "/project/lgrandi/": "/home/yuanlq/.tmp_job_submission/",
+    "/project2/lgrandi/": "/home/%s/.tmp_job_submission/"%(USER),
+    "/project/lgrandi/": "/home/%s/.tmp_job_submission/"%(USER),
 }
 MEM = {
     "/dali/lgrandi/": 25000,
@@ -70,8 +72,8 @@ class Submit(object):
         jobname = "scan_%s" % (loop_item.split("/")[1])
         # Modify here for the script to run
         jobstring = (
-            "python /home/yuanlq/software/xeda/xeda/xeda.py -t 500GB -o %s -d '[xenonnt]' -s %s"
-            % (OUTPUT_DIR[loop_item], loop_item)
+            "python %s -t 500GB -o %s -d '[xenonnt]' -s %s"
+            % (SCRIPT_PATH, OUTPUT_DIR[loop_item], loop_item)
         )
         print(jobstring)
 
