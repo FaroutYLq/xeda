@@ -70,7 +70,7 @@ class Submit(object):
         jobname = "scan_%s" % (loop_item.split("/")[1])
         # Modify here for the script to run
         jobstring = (
-            "python /home/yuanlq/software/xeda/xeda.py -t 500GB -o %s -d '[xenonnt]' -s %s"
+            "python /home/yuanlq/software/xeda/xeda/xeda.py -t 500GB -o %s -d '[xenonnt]' -s %s"
             % (OUTPUT_DIR[loop_item], loop_item)
         )
         print(jobstring)

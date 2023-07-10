@@ -55,7 +55,7 @@ class Submit(object):
     def _submit_single(self, loop_index, loop_item):
         jobname = "tar_%s" % (loop_item)
         # Modify here for the script to run
-        jobstring = "python /home/yuanlq/software/xeda/tar_and_split.py %s" % (
+        jobstring = "python /home/yuanlq/software/xeda/xeda/tar_and_split.py %s" % (
             loop_item
         )
         print("Running this job string: ")
