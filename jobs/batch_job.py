@@ -97,6 +97,10 @@ class Submit(object):
         )
 
 
+print("Weclome to XEDA disk scanning job submission!")
+print("Your job script directory is: %s" % (SCRIPT_PATH))
+print("Your job log directory is: %s" % (LOG_DIR[scope]))
+
 p = Submit()
 loop_over = TO_SCAN[scope]
 p.execute(loop_over=loop_over, max_num_submit=5, nmax=10000)
