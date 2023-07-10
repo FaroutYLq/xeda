@@ -25,7 +25,7 @@ OUTPUT_DIR = {
     "/project/lgrandi/": "/project2/lgrandi/yuanlq/shared/disk_usage/",
 }
 LOG_DIR = {
-    "/dali/lgrandi/": "/dali/lgrandi/yuanlq/logs/",
+    "/dali/lgrandi/": "/dali/lgrandi/%s/logs/"%(USER),
     "/project2/lgrandi/": "/home/%s/.tmp_job_submission/"%(USER),
     "/project/lgrandi/": "/home/%s/.tmp_job_submission/"%(USER),
 }
