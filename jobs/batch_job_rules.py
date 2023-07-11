@@ -5,11 +5,16 @@ import os, shlex
 import utilix
 from utilix.batchq import *
 from datetime import datetime
+from utilix import xent_collection
+coll = xent_collection()
 
 
+MAX_RUN_NUMBER = coll.count_documents({})
+N_JOBS = 20
 USER = os.environ['USER']
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 SCRIPT_PATH = os.path.join(DIR_PATH, "find_rules.py")
+OUTPUT_PATH = '/project2/lgrandi/yuanlq/shared/rucio_scan/'
 
 
 class Submit(object):
@@ -46,9 +51,12 @@ class Submit(object):
 
     def _submit_single(self, loop_index, loop_item):
         jobname = 'find_rules{:03}'.format(loop_index)
-        run_id = loop_item
+        job_i = loop_item
         # Modify here for the script to run
-        jobstring = "python %s %s"%(SCRIPT_PATH, run_id)
+        jobstring = "python %s %s %s"%(SCRIPT_PATH, 
+                                       job_i, 
+                                       int(MAX_RUN_NUMBER/N_JOBS), 
+                                       OUTPUT_PATH)
         print(jobstring)
 
         # Modify here for the log name
@@ -56,7 +64,7 @@ class Submit(object):
             jobstring, 
             log='/home/%s/.tmp_job_submission/find_rules_%s_%s.log'%(USER, 
                                                                      datetime.now().strftime('%Y%m%d'), 
-                                                                     run_id), 
+                                                                     job_i), 
             partition='xenon1t', qos='xenon1t',
             account='pi-lgrandi', jobname=jobname,
             delete_file=True, dry_run=False, mem_per_cpu=5000,
@@ -66,7 +74,7 @@ class Submit(object):
 p = Submit()
 
 # Modify here for the runs
-loop_over = np.arange(20)
+loop_over = np.arange(N_JOBS)
 
 print('Runs to process: ', len(loop_over))
 
