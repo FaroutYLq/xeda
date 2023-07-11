@@ -224,7 +224,6 @@ def size_vs_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8):
     sizes_tb = []
     for mode in unique_modes:
         rules_of_mode = rules[modes==mode]
-        print(rules_of_mode['size_gb'].sum())
         sizes_tb.append(rules_of_mode['size_gb'].sum()/1024)
 
     max_n_modes = min(len(unique_modes), max_n_modes)
