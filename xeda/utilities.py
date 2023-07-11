@@ -5,7 +5,8 @@ from utilix import xent_collection
 from glob import glob
 
 
-MAX_RUN_NUMBER = xent_collection().count_documents({})
+COLL = xent_collection()
+MAX_RUN_NUMBER = COLL.count_documents({})
 SR0_RIGHT = 34731
 SR0_LEFT  = 17918
 SR1_LEFT  = 43039
@@ -37,6 +38,43 @@ def load_rules(datestr, directory='/project2/lgrandi/yuanlq/shared/rucio_scan'):
 
     return rules_info
 
+def get_modes(rules):
+    """
+    Get run modes for the corresponding rule.
+    Args:
+        rules(array): rules table
+    Returns:
+        modes(array): array of run modes
+    """
+    modes = []
+    runs = rules['runid'].astype(int)
+
+    print('Loading run modes from RunDB...')
+    for r in tqdm(runs):
+        mode = COLL.find_one({'number': int(r)})['mode']
+        modes.append(mode)
+
+    return np.array(modes)
+
+def get_mode_by_run(runids=None):
+    """
+    Get run modes for the corresponding runID.
+    Args:
+        runids(array): array of runIDs, Default: None, i.e. all runIDs
+    Returns:
+        modes(array): array of run modes
+    """
+    if runids is None:
+        runids = np.arange(MAX_RUN_NUMBER)
+
+    modes = []
+    print('Loading run modes from RunDB...')
+    for r in tqdm(runids):
+        mode = COLL.find_one({'number': int(r)})['mode']
+        modes.append(mode)
+
+    return np.array(modes)
+
 def find_with_mode(rules, mode):
     """
     Find rules with a specific mode.
@@ -46,13 +84,13 @@ def find_with_mode(rules, mode):
     Returns:
         rules(array): rules table with only the selected mode
     """
-    runs = rules['runid'].astype(int)
     is_mode = np.zeros(len(rules), bool)
+    modes = get_mode_by_run()
     for i,r in enumerate(rules):
         if int(r['runid'])<MAX_RUN_NUMBER:
-            if runs[int(r['runid'])]['mode'] == mode:
+            if modes[int(r['runid'])] == mode:
                 is_mode[i] = True
-    print(np.sum(is_mode))
+
     return rules[is_mode]
 
 def size_vs_runs(rules, runid_min=0, runid_max=MAX_RUN_NUMBER, nbins=100):
