@@ -115,6 +115,15 @@ def in_runlist(rules, runlist):
 
 def plot_cum_sizes_tb(title, x_bins=100, x_range=(0, MAX_RUN_NUMBER), dpi=100, 
                       **rules):
+    """
+    Plot the cumulative size of rules as a function of runID.
+    Args:
+        title(str): plot title
+        x_bins(int): number of bins for runID,  Default: 100
+        x_range(tuple): range of runID, Default: (0, MAX_RUN_NUMBER)
+        dpi(int): dpi of the plot, Default: 100
+        **rules(**kwargs): dictionary of rules table
+    """
     xs = np.linspace(x_range[0], x_range[1], x_bins)
     plt.figure(dpi=dpi)
     for i in range(len(rules)):
