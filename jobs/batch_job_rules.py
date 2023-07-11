@@ -78,4 +78,4 @@ loop_over = np.arange(N_JOBS)
 
 print('Runs to process: ', len(loop_over))
 
-p.execute(loop_over=loop_over, max_num_submit=30, nmax=10000)
+p.execute(loop_over=loop_over, max_num_submit=N_JOBS+1, nmax=10000)
