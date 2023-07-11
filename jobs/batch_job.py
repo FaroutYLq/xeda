@@ -70,6 +70,7 @@ class Submit(object):
     def _submit_single(self, loop_item):
         jobname = "scan_%s" % (loop_item.split("/")[1])
         # Modify here for the script to run
+        print("Find your output in %s" %(OUTPUT_DIR[loop_item]))
         jobstring = (
             "python %s -t 500GB -o %s -d '[xenonnt]' -s %s"
             % (SCRIPT_PATH, OUTPUT_DIR[loop_item], loop_item)
