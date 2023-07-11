@@ -1,7 +1,6 @@
 import numpy as np
 import time
-import os, shlex
-#from subprocess import Popen, PIPE, STDOUT, TimeoutExpired
+import os
 import utilix
 from utilix.batchq import *
 from datetime import datetime

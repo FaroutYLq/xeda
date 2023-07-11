@@ -1,9 +1,6 @@
 import numpy as np
 import sys
-import pymongo
 from tqdm import tqdm
-from utilix import xent_collection
-from utilix import DB
 import numpy as np
 import admix
 from datetime import datetime
