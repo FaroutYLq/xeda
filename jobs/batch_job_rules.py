@@ -51,10 +51,10 @@ class Submit(object):
         jobname = 'find_rules{:03}'.format(loop_index)
         job_i = loop_item
         # Modify here for the script to run
-        jobstring = "python %s %s %s"%(SCRIPT_PATH, 
-                                       job_i, 
-                                       int(MAX_RUN_NUMBER/N_JOBS), 
-                                       OUTPUT_PATH)
+        jobstring = "python %s %s %s %s"%(SCRIPT_PATH, 
+                                          job_i, 
+                                          int(MAX_RUN_NUMBER/N_JOBS), 
+                                          OUTPUT_PATH)
         print(jobstring)
 
         # Modify here for the log name
