@@ -205,3 +205,42 @@ def plot_cum_sizes_tb(title, x_bins=100, x_range=(0, MAX_RUN_NUMBER), dpi=100,
     plt.axvspan(SR0_LEFT, SR0_RIGHT, alpha=0.3, color='k', label='SR0')
     plt.axvspan(SR1_LEFT, SR1_RIGHT, alpha=0.3, color='r', label='SR1')
     plt.legend()
+
+def size_vs_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8):
+    """
+    Compute the cumulative size of rules as a function of mode.
+    Args:
+        rules(array): rules table
+        title(str): plot title
+        graph(bool): whether to plot the result, Default: True
+        dpi(int): dpi of the plot, Default: 100
+        max_n_modes(int): maximum number of modes to plot, Default: 8
+    Returns:    
+        unique_modes(array): unique modes
+        sizes_tb(array): cumulative size of rules as a function of mode
+    """
+    modes = get_modes(rules)
+    unique_modes = np.unique(modes)
+    sizes_tb = []
+    for mode in unique_modes:
+        rules_of_mode = rules[modes==mode]
+        print(rules_of_mode['size_gb'].sum())
+        sizes_tb.append(rules_of_mode['size_gb'].sum()/1024)
+
+    max_n_modes = min(len(unique_modes), max_n_modes)
+    sizes_tb = np.array(sizes_tb)
+    
+    indecies = sizes_tb.argsort()
+    sizes_tb = sizes_tb[indecies]
+    unique_modes = unique_modes[indecies]
+
+    if graph:
+        plt.figure(dpi=dpi)
+        plt.bar(unique_modes[-max_n_modes:], sizes_tb[-max_n_modes:])
+        plt.xticks(rotation=90)
+        plt.ylabel('Size [TB]')
+        if title is not None:
+            plt.title(title)
+        plt.show()
+        
+    return unique_modes, sizes_tb
