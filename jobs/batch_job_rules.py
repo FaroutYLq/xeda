@@ -74,6 +74,6 @@ p = Submit()
 # Modify here for the runs
 loop_over = np.arange(N_JOBS)
 
-print('Runs to process: ', len(loop_over))
+print('Batch of runs to process: ', len(loop_over))
 
 p.execute(loop_over=loop_over, max_num_submit=N_JOBS+1, nmax=10000)
