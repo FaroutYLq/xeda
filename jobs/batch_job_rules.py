@@ -5,10 +5,9 @@ import utilix
 from utilix.batchq import *
 from datetime import datetime
 from utilix import xent_collection
-coll = xent_collection()
 
 
-MAX_RUN_NUMBER = coll.count_documents({})
+MAX_RUN_NUMBER = xent_collection().count_documents({})
 N_JOBS = 20
 USER = os.environ['USER']
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
