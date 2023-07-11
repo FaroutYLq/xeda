@@ -28,9 +28,11 @@ def load_rules(datestr, directory='/project2/lgrandi/yuanlq/shared/rucio_scan'):
 
     for i in tqdm(range(n_files)):
         if i == 0:
-            rules_info = np.load('%s/rucio_%s_all_rules0.npy'%(directory, datestr), allow_pickle=True)
+            rules_info = np.load('%s/rucio_%s_all_rules0.npy'%(directory, datestr), 
+                                 allow_pickle=True)
         else:
-            new = np.load('%s/rucio_%s_all_rules%s.npy'%(directory, datestr, i), allow_pickle=True)
+            new = np.load('%s/rucio_%s_all_rules%s.npy'%(directory, datestr, i), 
+                          allow_pickle=True)
             rules_info = np.concatenate((rules_info, new))
 
     return rules_info
