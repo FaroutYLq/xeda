@@ -3,9 +3,10 @@
 Job submission wrappers for `xeda`.
 
 ## Files
+- `cron_xeda.sbatch`: Cron job submission sbatch. It will in principle scan the disk everyday.
 - `batch_job.py`: Batch job submitter for disk scanning.
 - `batch_job_tar.py`: Batch job submitter for file archiving.
-- `cron_xeda.sbatch`: Cron job submission sbatch. It will in principle scan the disk everyday.
+- `batch_job_rules.py`: Batch job submitter for rucio rule scanning.
 - `submit_xeda_dali.sh`: Submit disk scanning job for `dali`.
 - `submit_xeda_midway2.sh`: Submit disk scanning job for `midway2`.
 - `submit_xeda_midway3.sh`: Submit disk scanning job for `midway3`.
