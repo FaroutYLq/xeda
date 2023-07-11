@@ -2,6 +2,7 @@ import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 from utilix import xent_collection
+from glob import glob
 
 
 MAX_RUN_NUMBER = xent_collection().count_documents({})
@@ -10,6 +11,29 @@ SR0_LEFT  = 17918
 SR1_LEFT  = 43039
 SR1_RIGHT = MAX_RUN_NUMBER
 
+
+def load_rules(datestr, directory='/project2/lgrandi/yuanlq/shared/rucio_scan'):
+    """
+    Load Rucio scan results.
+    Args:
+        datestr(str): date of the scan, e.g. '20210101'
+        directory(str): directory of the scan, Default: '/project2/lgrandi/yuanlq/shared/rucio_scan'
+    Returns:
+        rules_info(array): rules table
+    """
+    print('Loading Rucio scan results from %s, scanned on %s'%(directory, datestr))
+
+    globbed = glob('%s/rucio_%s_all_rules*.npy'%(directory, datestr))
+    n_files = len(globbed)
+
+    for i in tqdm(range(n_files)):
+        if i == 0:
+            rules_info = np.load('%s/rucio_%s_all_rules0.npy'%(directory, datestr), allow_pickle=True)
+        else:
+            new = np.load('%s/rucio_%s_all_rules%s.npy'%(directory, datestr, i), allow_pickle=True)
+            rules_info = np.concatenate((rules_info, new))
+
+    return rules_info
 
 def find_with_mode(rules, mode):
     """
