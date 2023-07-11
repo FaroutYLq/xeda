@@ -11,7 +11,7 @@ MAX_RUN_NUMBER = xent_collection().count_documents({})
 N_JOBS = 20
 USER = os.environ['USER']
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
-SCRIPT_PATH = os.path.join(DIR_PATH, "find_rules.py")
+SCRIPT_PATH = os.path.join(DIR_PATH, "../xeda/find_rules.py")
 OUTPUT_PATH = '/project2/lgrandi/yuanlq/shared/rucio_scan/'
 
 
@@ -73,7 +73,7 @@ p = Submit()
 
 # Modify here for the runs
 loop_over = np.arange(N_JOBS)
-
 print('Batch of runs to process: ', len(loop_over))
-
 p.execute(loop_over=loop_over, max_num_submit=N_JOBS+1, nmax=10000)
+
+print("Find your outputs at %s"%OUTPUT_PATH)

@@ -20,9 +20,13 @@ python batch_job_tar.py /dali/lgrandi/yuanlq/
 - To scan a certain server, run this
 ```
 # Change the argument to be one of the following : dali, midway2, midway3
-python /home/yuanlq/software/xeda/batch_job.py midway2
+python batch_job.py midway2
 ```
 - To start the cron job for disk scanning, run this on midway2/dali login nodes
 ```
 sbatch cron_xeda.sbatch
+```
+- To start the scanning of rucio rule scanning:
+```
+python batch_job_rules.py
 ```
