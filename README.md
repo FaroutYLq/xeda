@@ -45,11 +45,6 @@ A more detailed explanation can be found below
 | `-d`, `--deep_scan` | Deeper scan at these folders. | `"[xenonnt, xenon1t, yuanlq]"` | None | False |
 | `-t`, `--threshold` | Threshold of minimum folder size to be analyzed. | `1TB` | `'None'` | False |
 
-## Examples
-Please find then at
-- Input file: `/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_input_20220306.txt`
-- Output file: `/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_input_20220306.txt`
-
 ## Classifcation
 |Class  | Meaning  |
 | :-----------:|:-------------:| 
@@ -86,12 +81,23 @@ adv_analysis.track_user_history(db, user='xenonnt', server='dali', mode='size', 
 adv_analysis.compare_to_last_time(db, server="dali")
 ```
 
-## Tar scripts
-`batch_job_tar.py` submits jobs running `tar_and_split.py`, which tars and com and split the target directory or file into
+## Examples
+Please find then at
+- Input file: `/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_input_20220306.txt`
+- Output file: `/project2/lgrandi/yuanlq/shared/disk_usage/dali_lgrandi_input_20220306.txt`
+
+## More
+
+### Archiving
+`jobs/batch_job_tar.py` submits jobs running `tar_and_split.py`, which tars and com and split the target directory or file into
 ```
 python batch_job_tar.py /dali/lgrandi/yuanlq/
 ```
 will tar and split `/dali/lgrandi/yuanlq/` and put output files in `/dali/lgrandi/yuanlq_relocated/`.
 
-## Deletion
+### Deletion
 This is an interface to `rucio`. Still in construction.
+
+### Rucio Scan
+`jobs/batch_job_rules.py` submits jobs running `find_rules.py`, which find all the rules in `rucio` and give analyzable outputs for further analysis.
+
