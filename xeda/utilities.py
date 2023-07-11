@@ -1,7 +1,14 @@
 import numpy as np
 from tqdm import tqdm
+import matplotlib.pyplot as plt
 from utilix import xent_collection
+
+
 MAX_RUN_NUMBER = xent_collection().count_documents({})
+SR0_RIGHT = 34731
+SR0_LEFT  = 17918
+SR1_LEFT  = 43039
+SR1_RIGHT = MAX_RUN_NUMBER
 
 
 def find_with_mode(rules, mode):
@@ -105,3 +112,23 @@ def in_runlist(rules, runlist):
     runids = rules['runid'].astype(int)
     indices = np.where(np.isin(runids, runlist.astype(int)))[0]
     return rules[indices]
+
+def plot_cum_sizes_tb(title, x_bins=100, x_range=(0, MAX_RUN_NUMBER), dpi=100, 
+                      **rules):
+    xs = np.linspace(x_range[0], x_range[1], x_bins)
+    plt.figure(dpi=dpi)
+    for i in range(len(rules)):
+        name = list(rules.keys())[i]
+        cum_sizes_tb = size_vs_runs(rules[name],
+                                    runid_min=x_range[0], 
+                                    runid_max=x_range[1], 
+                                    nbins=x_bins)
+        
+        label = str(name)
+        plt.plot(xs, cum_sizes_tb, label=label)
+    plt.xlabel('RunID')
+    plt.title(title)
+    plt.ylabel('Size [TB]')
+    plt.axvspan(SR0_LEFT, SR0_RIGHT, alpha=0.3, color='k', label='SR0')
+    plt.axvspan(SR1_LEFT, SR1_RIGHT, alpha=0.3, color='r', label='SR1')
+    plt.legend()
