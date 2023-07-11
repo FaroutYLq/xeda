@@ -10,6 +10,7 @@ Core functions for `xeda`.
 - `find_rules`: core for `rucio` rules scanning. 
 - `tar_and_split.py`: tar and split a folder for archiving. Check `../jobs` folder for usage.
 - `xeda.py`: core for disk usage scanning. Check `../README.md` and `../jobs` for usage.
+- `utilities.py`: useful functions for analyzing rucio scan results.
 
 ## Usage
 It is not recommended to run them individually. You can find more information on usage in the `README.md` of the parent folder, and in `jobs` folder. 
