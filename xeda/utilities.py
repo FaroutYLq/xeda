@@ -261,7 +261,7 @@ def check_by_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8, wiki=Tr
         
         print("<caption>")
         print(title)
-        print("/caption")
+        print("</caption>")
         print("</table>")
 
     if graph:
