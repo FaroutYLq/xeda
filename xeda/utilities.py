@@ -249,17 +249,21 @@ def check_by_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8, wiki=Tr
 
     if wiki:
         print("<table>")
+        print("^%s^^^^"%(title))
         print("^ Mode ^ Size [TB] ^ Count ^ Percentile ^")
         for i in range(n_unique_modes):
             print("| ''{}'' | {:.2f} | {} | {} |".format(unique_modes[-i-1], 
                                                          sizes_tb[-i-1], 
                                                          counts[-i-1],
                                                          percentiles[-i-1]))
+        print("| **Total** | {:.2f} | {} | 100 |".format(sizes_tb.sum(),
+                                                         counts.sum()))
+        
         print("<caption>")
         print(title)
         print("/caption")
         print("</table>")
-        
+
     if graph:
         plt.figure(dpi=dpi)
         plt.bar(unique_modes[-max_n_modes:], sizes_tb[-max_n_modes:])
