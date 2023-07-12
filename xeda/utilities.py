@@ -208,9 +208,9 @@ def plot_cum_sizes_tb(title, x_bins=100, x_range=(0, MAX_RUN_NUMBER), dpi=100,
     plt.axvspan(SR1_LEFT, SR1_RIGHT, alpha=0.3, color='r', label='SR1')
     plt.legend()
 
-def size_vs_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8):
+def check_by_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8):
     """
-    Compute the cumulative size of rules as a function of mode.
+    Compute the cumulative size and number counts of rules as a function of mode.
     Args:
         rules(array): rules table
         title(str): plot title
