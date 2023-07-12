@@ -238,9 +238,13 @@ def check_by_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8, wiki=Tr
     n_unique_modes = len(unique_modes)
     max_n_modes = min(n_unique_modes, max_n_modes)
     sizes_tb = np.array(sizes_tb)
+    counts = np.array(counts)
+    percentiles = np.array(percentiles)
     
     indecies = sizes_tb.argsort()
     sizes_tb = sizes_tb[indecies]
+    counts = counts[indecies]
+    percentiles = percentiles[indecies]
     unique_modes = unique_modes[indecies]
 
     if wiki:
