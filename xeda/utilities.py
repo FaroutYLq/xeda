@@ -224,9 +224,11 @@ def size_vs_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8):
     modes = get_modes(rules)
     unique_modes = np.unique(modes)
     sizes_tb = []
+    counts = []
     for mode in unique_modes:
         rules_of_mode = rules[modes==mode]
         sizes_tb.append(rules_of_mode['size_gb'].sum()/1024)
+        counts.append(len(rules_of_mode))
 
     max_n_modes = min(len(unique_modes), max_n_modes)
     sizes_tb = np.array(sizes_tb)
@@ -244,4 +246,4 @@ def size_vs_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8):
             plt.title(title)
         plt.show()
         
-    return unique_modes, sizes_tb
+    return unique_modes, sizes_tb, counts
