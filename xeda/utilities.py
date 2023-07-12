@@ -226,10 +226,14 @@ def check_by_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8, wiki=Tr
     unique_modes = np.unique(modes)
     sizes_tb = []
     counts = []
+    percentiles = []
+    total_size = rules['size_gb'].sum()/1024
     for mode in unique_modes:
         rules_of_mode = rules[modes==mode]
-        sizes_tb.append(rules_of_mode['size_gb'].sum()/1024)
+        size_tb = rules_of_mode['size_gb'].sum()/1024
+        sizes_tb.append(size_tb)
         counts.append(len(rules_of_mode))
+        percentiles.append(int(size_tb/total_size*100))
 
     n_unique_modes = len(unique_modes)
     max_n_modes = min(n_unique_modes, max_n_modes)
@@ -242,9 +246,10 @@ def check_by_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8, wiki=Tr
     if wiki:
         print("^ Mode ^ Size [TB] ^ Count ^")
         for i in range(len(n_unique_modes)):
-            print("| ''{}'' | {:.2f} | {} |".format(unique_modes[-i-1], 
-                                                    sizes_tb[-i-1], 
-                                                    counts[-i-1]))
+            print("| ''{}'' | {:.2f} | {} | {} |".format(unique_modes[-i-1], 
+                                                         sizes_tb[-i-1], 
+                                                         counts[-i-1],
+                                                         percentiles[-i-1]))
 
     if graph:
         plt.figure(dpi=dpi)
