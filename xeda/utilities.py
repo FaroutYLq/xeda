@@ -12,6 +12,8 @@ SR0_LEFT  = 17918
 SR1_LEFT  = 43039
 SR1_RIGHT = MAX_RUN_NUMBER
 
+PEAKS_DTYPES = ['peaklets', 'merged_s2s', 'lone_hits', 'hitlets_nv']
+
 
 def load_rules(datestr, directory='/project2/lgrandi/yuanlq/shared/rucio_scan'):
     """
