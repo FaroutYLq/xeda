@@ -256,7 +256,7 @@ def check_by_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8, wiki=Tr
                                                               sizes_tb[-i-1], 
                                                               counts[-i-1],
                                                               percentiles[-i-1]))
-        print("| **Total** | {:.2f} | {} | 100 |".format(sizes_tb.sum(),
+        print("| **Total** | **{:.2f}** | **{}** | 100 |".format(sizes_tb.sum(),
                                                          counts.sum()))
         
         print("<caption>")
