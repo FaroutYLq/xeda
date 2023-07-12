@@ -242,7 +242,9 @@ def check_by_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8, wiki=Tr
     if wiki:
         print('^ Mode ^ Size [TB] ^ Count ^')
         for i in range(len(n_unique_modes)):
-            print('| {} | {:.2f} | {} |'.format(unique_modes[-i-1], sizes_tb[-i-1], counts[-i-1]))
+            print('| {} | {:.2f} | {} |'.format(unique_modes[-i-1], 
+                                                sizes_tb[-i-1], 
+                                                counts[-i-1]))
 
     if graph:
         plt.figure(dpi=dpi)
