@@ -208,7 +208,7 @@ def plot_cum_sizes_tb(title, x_bins=100, x_range=(0, MAX_RUN_NUMBER), dpi=100,
     plt.axvspan(SR1_LEFT, SR1_RIGHT, alpha=0.3, color='r', label='SR1')
     plt.legend()
 
-def check_by_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8):
+def check_by_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8, wiki=True):
     """
     Compute the cumulative size and number counts of rules as a function of mode.
     Args:
@@ -217,6 +217,7 @@ def check_by_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8):
         graph(bool): whether to plot the result, Default: True
         dpi(int): dpi of the plot, Default: 100
         max_n_modes(int): maximum number of modes to plot, Default: 8
+        wiki(bool): whether to print the result in wiki format, Default: True
     Returns:    
         unique_modes(array): unique modes
         sizes_tb(array): cumulative size of rules as a function of mode
@@ -230,12 +231,18 @@ def check_by_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8):
         sizes_tb.append(rules_of_mode['size_gb'].sum()/1024)
         counts.append(len(rules_of_mode))
 
-    max_n_modes = min(len(unique_modes), max_n_modes)
+    n_unique_modes = len(unique_modes)
+    max_n_modes = min(n_unique_modes, max_n_modes)
     sizes_tb = np.array(sizes_tb)
     
     indecies = sizes_tb.argsort()
     sizes_tb = sizes_tb[indecies]
     unique_modes = unique_modes[indecies]
+
+    if wiki:
+        print('^ Mode ^ Size [TB] ^ Count ^')
+        for i in range(len(n_unique_modes)):
+            print('| {} | {:.2f} | {} |'.format(unique_modes[-i-1], sizes_tb[-i-1], counts[-i-1]))
 
     if graph:
         plt.figure(dpi=dpi)
