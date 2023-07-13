@@ -12,6 +12,8 @@ SR0_LEFT  = 17918
 SR1_LEFT  = 43039
 SR1_RIGHT = MAX_RUN_NUMBER
 
+PEAKS_DTYPES = ['peaklets', 'merged_s2s', 'lone_hits', 'hitlets_nv']
+
 
 def load_rules(datestr, directory='/project2/lgrandi/yuanlq/shared/rucio_scan'):
     """
@@ -206,15 +208,16 @@ def plot_cum_sizes_tb(title, x_bins=100, x_range=(0, MAX_RUN_NUMBER), dpi=100,
     plt.axvspan(SR1_LEFT, SR1_RIGHT, alpha=0.3, color='r', label='SR1')
     plt.legend()
 
-def size_vs_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8):
+def check_by_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8, wiki=True):
     """
-    Compute the cumulative size of rules as a function of mode.
+    Compute the cumulative size and number counts of rules as a function of mode.
     Args:
         rules(array): rules table
         title(str): plot title
         graph(bool): whether to plot the result, Default: True
         dpi(int): dpi of the plot, Default: 100
         max_n_modes(int): maximum number of modes to plot, Default: 8
+        wiki(bool): whether to print the result in wiki format, Default: True
     Returns:    
         unique_modes(array): unique modes
         sizes_tb(array): cumulative size of rules as a function of mode
@@ -222,16 +225,44 @@ def size_vs_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8):
     modes = get_modes(rules)
     unique_modes = np.unique(modes)
     sizes_tb = []
+    counts = []
+    percentiles = []
+    total_size = rules['size_gb'].sum()/1024
     for mode in unique_modes:
         rules_of_mode = rules[modes==mode]
-        sizes_tb.append(rules_of_mode['size_gb'].sum()/1024)
+        size_tb = rules_of_mode['size_gb'].sum()/1024
+        sizes_tb.append(size_tb)
+        counts.append(len(rules_of_mode))
+        percentiles.append(size_tb/total_size*100)
 
-    max_n_modes = min(len(unique_modes), max_n_modes)
+    n_unique_modes = len(unique_modes)
+    max_n_modes = min(n_unique_modes, max_n_modes)
     sizes_tb = np.array(sizes_tb)
+    counts = np.array(counts)
+    percentiles = np.array(percentiles)
     
     indecies = sizes_tb.argsort()
     sizes_tb = sizes_tb[indecies]
+    counts = counts[indecies]
+    percentiles = percentiles[indecies]
     unique_modes = unique_modes[indecies]
+
+    if wiki:
+        print("<table>")
+        print("^%s^^^^"%(title))
+        print("^ Mode ^ Size [TB] ^ Count ^ Percentile ^")
+        for i in range(n_unique_modes):
+            print("| ''{}'' | {:.2f} | {} | {:.2f} |".format(unique_modes[-i-1], 
+                                                              sizes_tb[-i-1], 
+                                                              counts[-i-1],
+                                                              percentiles[-i-1]))
+        print("| **Total** | **{:.2f}** | **{}** | 100 |".format(sizes_tb.sum(),
+                                                         counts.sum()))
+        
+        print("<caption>")
+        print(title)
+        print("</caption>")
+        print("</table>")
 
     if graph:
         plt.figure(dpi=dpi)
@@ -242,4 +273,4 @@ def size_vs_mode(rules, title=None, graph=True, dpi=100, max_n_modes=8):
             plt.title(title)
         plt.show()
         
-    return unique_modes, sizes_tb
+    return unique_modes, sizes_tb, counts
