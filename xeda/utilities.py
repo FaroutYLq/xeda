@@ -164,8 +164,8 @@ def filter_out_rad(rules):
     """
     is_rad = np.zeros(len(rules), bool)
     for i,r in enumerate(rules):
-        if TAGS_PER_RUN[int(r['runid'])] == 'RAD_commissioning':
-            is_rad[i] = True
+        is_rad[i] = TAGS_PER_RUN[int(r['runid'])]['RAD_commissioning']:
+
     return rules[~is_rad]
 
 def keep_unique_runs(rules):
