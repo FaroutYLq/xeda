@@ -20,6 +20,7 @@ TAGS_TUPLES = [('number', np.int32), ('mode', 'O')] + TAGS_TUPLES
 TAGS_PER_RUN_DTYPE = np.dtype(TAGS_TUPLES)
 TAGS_PER_RUN = np.zeros(MAX_RUN_NUMBER, dtype = TAGS_PER_RUN_DTYPE)
 
+print("Loading information from RunDB, might take 2min...")
 for i in tqdm(range(MAX_RUN_NUMBER)):
     query = {'number': i}
     doc = COLL.find_one(query)
