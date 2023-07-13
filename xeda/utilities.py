@@ -14,6 +14,51 @@ SR1_RIGHT = MAX_RUN_NUMBER
 
 PEAKS_DTYPES = ['peaklets', 'merged_s2s', 'lone_hits', 'hitlets_nv']
 
+TAGS_PER_RUN_DTYPE = np.dtype([('number', np.int32), 
+                                ('mode', 'O'),
+                                ('bad', bool),
+                                ('messy', bool),
+                                ('hot_spot', bool),
+                                ('ramp_down', bool),
+                                ('ramp_up', bool),
+                                ('pmt_trip', bool),
+                                ('rn220_fast_alphas', bool),
+                                ('after_rn220', bool),
+                                ('abandon', bool),
+                                ('RAD_commissioning', bool)])
+TAGS_PER_RUN = np.zeros(MAX_RUN_NUMBER, dtype = TAGS_PER_RUN_DTYPE)
+
+for i in tqdm(range(MAX_RUN_NUMBER)):
+    query = {'number': i}
+    doc = COLL.find_one(query)
+    TAGS_PER_RUN[i]['number'] = i
+    TAGS_PER_RUN[i]['mode'] = doc['mode']
+    try:
+        tags = doc['tags']
+        for t in tags:
+            if t['name'] == 'bad':
+                TAGS_PER_RUN[i]['bad'] = True
+            elif t['name'] == 'messy':
+                TAGS_PER_RUN[i]['messy'] = True
+            elif t['name'] == 'hot_spot':
+                TAGS_PER_RUN[i]['hot_spot'] = True
+            elif t['name'] == 'ramp_down':
+                TAGS_PER_RUN[i]['ramp_down'] = True
+            elif t['name'] == 'ramp_up':
+                TAGS_PER_RUN[i]['ramp_up'] = True            
+            elif t['name'] == 'pmt_trip':
+                TAGS_PER_RUN[i]['pmt_trip'] = True
+            elif t['name'] == 'rn220_fast_alphas':
+                TAGS_PER_RUN[i]['rn220_fast_alphas'] = True
+            elif t['name'] == 'after_rn220':
+                TAGS_PER_RUN[i]['after_rn220'] = True
+            elif t['name'] == 'abandon':
+                TAGS_PER_RUN[i]['abandon'] = True
+            elif t['name'] == 'RAD_commissioning':
+                TAGS_PER_RUN[i]['RAD_commissioning'] = True
+    except:
+        pass
+
 
 def load_rules(datestr, directory='/project2/lgrandi/yuanlq/shared/rucio_scan'):
     """
@@ -128,11 +173,10 @@ def find_with_tags(rules, tags):
     Returns:
         rules(array): rules table with only the selected tags
     """
-    runs = rules['runid'].astype(int)
     tagged = np.zeros(len(rules), bool)
     for i,r in enumerate(rules):
         for t in tags:
-            if runs[int(r['runid'])][t]:
+            if TAGS_PER_RUN[int(r['runid'])][t]:
                 tagged[i] = True
     print(np.sum(tagged))
     return rules[tagged]
@@ -145,10 +189,9 @@ def filter_out_rad(rules):
     Returns:
         rules(array): rules table without RAD commissioning runs
     """
-    runs = rules['runid'].astype(int)
     is_rad = np.zeros(len(rules), bool)
     for i,r in enumerate(rules):
-        if runs[int(r['runid'])]['RAD_commissioning']:
+        if TAGS_PER_RUN[int(r['runid'])] == 'RAD_commissioning':
             is_rad[i] = True
     return rules[~is_rad]
 
