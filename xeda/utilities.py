@@ -13,6 +13,26 @@ SR1_LEFT  = 43039
 SR1_RIGHT = MAX_RUN_NUMBER
 
 PEAKS_DTYPES = ['peaklets', 'merged_s2s', 'lone_hits', 'hitlets_nv']
+TAGS = ['bad', 'messy', 'hot_spot', 'ramp_down', 'ramp_up', 'pmt_trip', 
+        'rn220_fast_alphas', 'after_rn220', 'abandon', 'RAD_commissioning']
+TAGS_TUPLES = [(TAG, bool) for TAG in TAGS]
+TAGS_TUPLES = [('number', np.int32), ('mode', 'O')] + TAGS_TUPLES
+TAGS_PER_RUN_DTYPE = np.dtype(TAGS_TUPLES)
+TAGS_PER_RUN = np.zeros(MAX_RUN_NUMBER, dtype = TAGS_PER_RUN_DTYPE)
+
+print("Loading information from RunDB, might take 2min...")
+for i in tqdm(range(MAX_RUN_NUMBER)):
+    query = {'number': i}
+    doc = COLL.find_one(query)
+    TAGS_PER_RUN[i]['number'] = i
+    TAGS_PER_RUN[i]['mode'] = doc['mode']
+    try:
+        tags = doc['tags']
+        for t in tags:
+            if t['name'] in TAGS:
+                TAGS_PER_RUN[i][t['name']] = True
+    except:
+        pass
 
 
 def load_rules(datestr, directory='/project2/lgrandi/yuanlq/shared/rucio_scan'):
@@ -128,13 +148,11 @@ def find_with_tags(rules, tags):
     Returns:
         rules(array): rules table with only the selected tags
     """
-    runs = rules['runid'].astype(int)
     tagged = np.zeros(len(rules), bool)
     for i,r in enumerate(rules):
         for t in tags:
-            if runs[int(r['runid'])][t]:
+            if TAGS_PER_RUN[int(r['runid'])][t]:
                 tagged[i] = True
-    print(np.sum(tagged))
     return rules[tagged]
 
 def filter_out_rad(rules):
@@ -145,11 +163,10 @@ def filter_out_rad(rules):
     Returns:
         rules(array): rules table without RAD commissioning runs
     """
-    runs = rules['runid'].astype(int)
     is_rad = np.zeros(len(rules), bool)
     for i,r in enumerate(rules):
-        if runs[int(r['runid'])]['RAD_commissioning']:
-            is_rad[i] = True
+        is_rad[i] = TAGS_PER_RUN[int(r['runid'])]['RAD_commissioning']
+
     return rules[~is_rad]
 
 def keep_unique_runs(rules):
