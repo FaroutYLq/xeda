@@ -16,7 +16,7 @@ _, did_npy_path, rse  = sys.argv
 np_load_old = np.load
 np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
 
-dids_to_remove = np.load(did_npy_path)['dataset_did']
+dids_to_remove = np.load(did_npy_path)
 print("datasets to remove: ",len(dids_to_remove))
 
 
@@ -89,6 +89,9 @@ for did in tqdm(dids_to_remove):
 
     if not rule_to_delete_exists or nrules_to_keep_is_ok < rse_redundancy or one_rule_to_keep_is_bad:
         print("Error! Dataset {0} cannot be deleted in {1}".format(did,rse))
+        print("Rule to delete exists: {0}".format(rule_to_delete_exists))
+        print("Number of rules to keep is ok: {0}".format(nrules_to_keep_is_ok))
+        print("One rule to keep is bad: {0}".format(one_rule_to_keep_is_bad))
         errfile = open('baddatasets.txt', 'a')
         errfile.write('{0}, {1}'.format(did,rse))
         errfile.write("\n")
