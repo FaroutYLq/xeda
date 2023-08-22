@@ -58,7 +58,7 @@ for did in tqdm(dids_to_remove):
             rule_to_delete_exists = True
             nfiles_to_delete = rule['locks_ok_cnt']
             rule_to_delete_id = rule['id']
-            #print('  Checking {0} which is equal to {1}'.format(rule['rse_expression'],rse))
+            print('  Checking {0} which is equal to {1}'.format(rule['rse_expression'],rse))
 
 
     for rule in rules:
@@ -74,12 +74,12 @@ for did in tqdm(dids_to_remove):
             print('  Checking {0} which is different from {1}'.format(rule['rse_expression'],rse))
             #print(replicas)
             for file in replicas:
-                #print('    Checking file ',file['rses'][rule['rse_expression']][0])
+                print('    Checking file ',file['rses'][rule['rse_expression']][0])
                 gfal_filename = file['rses'][rule['rse_expression']][0]
                 try:
                     gfal_filestat = ctx.lstat(gfal_filename)
                 except gfal2.GError:
-#                    print("gfal2 error on file {0} from did {1} in rse {2}".format(gfal_filename,did,rule['rse_expression']))
+                    print("gfal2 error on file {0} from did {1} in rse {2}".format(gfal_filename,did,rule['rse_expression']))
                     print("gfal2 error!")
                 gfal_filesize = gfal_filestat.st_size
                 if file['bytes']!=gfal_filesize:
@@ -95,17 +95,17 @@ for did in tqdm(dids_to_remove):
         errfile.close()
     else:
         print("  Deleting {0} in {1}: {2}".format(did,rse,rule_to_delete_id))
-#        c.update_replication_rule(rule_to_delete_id, {'account' : 'production'})
-#        c.delete_replication_rule(rule_to_delete_id, purge_replicas=True)
+        c.update_replication_rule(rule_to_delete_id, {'account' : 'production'})
+        c.delete_replication_rule(rule_to_delete_id, purge_replicas=True)
 
         hash = did.split('-')[-1]
         dtype = did.split('-')[0].split(':')[-1]
         number = int(did.split(':')[0].split('_')[-1])
 
         print("  Deleting the db entry {0} of the rse {1}".format(did,rse))
-#        print("  Run number: {0}".format(number))
-#        print("  Data type: {0}".format(dtype))
-#        print("  Hash: {0}".format(hash))
+        print("  Run number: {0}".format(number))
+        print("  Data type: {0}".format(dtype))
+        print("  Hash: {0}".format(hash))
 
         run = db.find_one({'number' : number})
 
@@ -118,8 +118,8 @@ for did in tqdm(dids_to_remove):
             
         #Delete the datum
         if datum is not None:
-#            db.RemoveDatafield(run['_id'],datum)
-#            print(datum)
+            db.RemoveDatafield(run['_id'],datum)
+            print(datum)
             print("Datum deleted in DB.")
         else:
             print('There is no datum to delete')
