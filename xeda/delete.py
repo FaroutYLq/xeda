@@ -122,7 +122,7 @@ for did in tqdm(dids_to_remove):
             
         #Delete the datum
         if datum is not None:
-            db.RemoveDatafield(run['_id'],datum)
+            RemoveDatafield(db, run['_id'],datum)
             print(datum)
             print("Datum deleted in DB.")
         else:
@@ -132,6 +132,6 @@ for did in tqdm(dids_to_remove):
 
         
 
-    time.sleep(10)
+    time.sleep(30)
 
 #    print(replicas)
