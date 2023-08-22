@@ -37,7 +37,8 @@ def RemoveDatafield(db, id_field, rem_dict):
 
 db = xent_collection()
 
-rse_redundancy = 1
+# 0 means doesn't require replica. 1 means requires one replica.
+rse_redundancy = 0
 
 for did in tqdm(dids_to_remove):
 
