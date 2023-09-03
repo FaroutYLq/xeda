@@ -1,52 +1,41 @@
-from utilix.rundb import xent_collection
+# This script only works on rundb machine!!
+# EXTREMELLY DANGEROUS: DO NOT RUN UNLESS YOU KNOW WHAT YOU ARE DOING!
+
+import pymongo
 import numpy as np
-from tqdm import tqdm
-import sys
-import datetime
 
-_, did_npy_path, rse  = sys.argv
+delete_dids = np.load("/home/centos/clean_up_rundb/20230903/deletion_trial_dids_osg.npy")
+rse = "UC_OSG_USERDISK"
+password = "ASK TEAM A"
 
-dids_to_remove = np.load(did_npy_path)
-print("datasets to remove from DB: ",len(dids_to_remove))
+client = pymongo.MongoClient('mongodb://nt_bookkeeping:%s@xenon1t-daq.lngs.infn.it:27017/xenonnt'%(password))
+rundb = client['xenonnt']['runs']
+run_docs = rundb.find({}, projection={"number": 1, "data": 1})
+
+ndel = {}
+nentries = {}
+
+def keep(d):
+    return d.get("did", None) not in delete_dids or d.get("location", None) != rse
 
 
-def RemoveDatafield(db, id_field, rem_dict):
-    """
-    Remove a data field from a run document in the database.
-    WARNING: we are pretending we are admix!!
-    """
-    new_entry = dict(rem_dict.items())
-    new_entry.update({"at" : datetime.datetime.utcnow(), "by" : "admix"})
+for doc in run_docs:
+    runid = doc.get("number", None)
+    if runid is None:
+        continue
     
-    db.update_one({"_id" : id_field},
-                              {"$pull" : {"data" : rem_dict},
-                               "$push" : {"deleted_data" : new_entry}})
+    data = doc.get("data", None)
+    if data is None:
+        continue
 
-db = xent_collection()
+    new_data = list(filter(keep, data))
+    if len(new_data) == len(data):
+        continue
 
-for did in tqdm(dids_to_remove):
-    lineage_hash = did.split('-')[-1]
-    dtype = did.split('-')[0].split(':')[-1]
-    number = int(did.split(':')[0].split('_')[-1])
-
-    print("  Deleting the db entry {0} of the rse {1}".format(did,rse))
-    print("  Run number: {0}".format(number))
-    print("  Data type: {0}".format(dtype))
-    print("  Hash: {0}".format(lineage_hash))
-    run = db.find_one({'number' : number})
-
-    #Checks if the datum exists in the DB
-    datum = None
-    for d in run['data']:
-        if d['type'] == dtype and d['host'] == 'rucio-catalogue' and d['location'] == rse:
-            datum = d
-            break
-
-    #Delete the datum
-    if datum is not None:
-        RemoveDatafield(db, run['_id'],datum)
-        print(datum)
-        print("Datum deleted in DB.")
-    else:
-        print('There is no datum to delete')
-
+    try:
+        # This is the dangerous line!
+        #rundb.update_one({"number": runid,}, {"$set": {"data": new_data} })
+        print("Done for %s"%(runid))
+    except:
+        print("%s Failed?!"%(runid))
+    
