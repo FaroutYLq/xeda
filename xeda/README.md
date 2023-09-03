@@ -6,7 +6,8 @@ Core functions for `xeda`.
 ## Files
 - `adv_analysis.py`: `.npy` output based advanced disk analysis. Results interpreted in `../results.ipynb`.
 - `analysis.py`: `.txt` output based disk analysis. Human readable results are produced.
-- `delete.py`: `admix` wrapper inheritted from data manager. Never comissioned. FIXME
+- `delete.py`: `admix` wrapper inheritted from data manager. 
+- `dbclean.py`: mimic what `admix` do when deleting data entry from RunDB.
 - `find_rules`: core for `rucio` rules scanning. 
 - `tar_and_split.py`: tar and split a folder for archiving. Check `../jobs` folder for usage.
 - `xeda.py`: core for disk usage scanning. Check `../README.md` and `../jobs` for usage.
