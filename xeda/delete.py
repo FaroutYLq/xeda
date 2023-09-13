@@ -61,6 +61,9 @@ for did in tqdm(dids_to_remove):
             rule_to_delete_id = rule['id']
             print('  Checking {0} which is equal to {1}'.format(rule['rse_expression'],rse))
 
+    if not rule_to_delete_exists:
+        print("Cannot find rule to delete for dataset {0} in {1}".format(did,rse))
+        continue
 
     for rule in rules:
         if rule['rse_expression']!=rse:
@@ -106,32 +109,32 @@ for did in tqdm(dids_to_remove):
         dtype = did.split('-')[0].split(':')[-1]
         number = int(did.split(':')[0].split('_')[-1])
 
-        print("  Deleting the db entry {0} of the rse {1}".format(did,rse))
-        print("  Run number: {0}".format(number))
-        print("  Data type: {0}".format(dtype))
-        print("  Hash: {0}".format(hash))
+        #print("  Deleting the db entry {0} of the rse {1}".format(did,rse))
+        #print("  Run number: {0}".format(number))
+        #print("  Data type: {0}".format(dtype))
+        #print("  Hash: {0}".format(hash))
 
-        run = db.find_one({'number' : number})
+        #run = db.find_one({'number' : number})
 
         #Checks if the datum exists in the DB
-        datum = None
-        for d in run['data']:
-            if d['type'] == dtype and d['host'] == 'rucio-catalogue' and d['location'] == rse:
-                datum = d
-                break
-            
+        #datum = None
+        #for d in run['data']:
+        #    if d['type'] == dtype and d['host'] == 'rucio-catalogue' and d['location'] == rse:
+        #        datum = d
+        #        break
+          
         #Delete the datum
-        if datum is not None:
-            RemoveDatafield(db, run['_id'],datum)
-            print(datum)
-            print("Datum deleted in DB.")
-        else:
-            print('There is no datum to delete')
+        #if datum is not None:
+            #RemoveDatafield(db, run['_id'],datum)
+            #print(datum)
+            #print("Datum deleted in DB.")
+        #else:
+            #print('There is no datum to delete')
 
 
 
         
 
-    time.sleep(10)
+    time.sleep(15)
 
 #    print(replicas)
