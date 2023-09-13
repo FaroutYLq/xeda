@@ -135,6 +135,6 @@ for did in tqdm(dids_to_remove):
 
         
 
-    time.sleep(15)
+    time.sleep(10)
 
 #    print(replicas)

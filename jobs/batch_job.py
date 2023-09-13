@@ -17,8 +17,8 @@ TO_SCAN = {
     'midway2': ["/project2/lgrandi/"],
     "midway3": ["/project/lgrandi/"]
     }
-QOS = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "broadwl", "/project/lgrandi/": "broadwl"}
-PARTITION = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "broadwl", "/project/lgrandi/": "broadwl"}
+QOS = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "lgrandi", "/project/lgrandi/": "lgrandi"}
+PARTITION = {"/dali/lgrandi/": "dali", "/project2/lgrandi/": "lgrandi", "/project/lgrandi/": "lgrandi"}
 OUTPUT_DIR = {
     "/dali/lgrandi/": "/dali/lgrandi/yuanlq/shared/disk_usage/",
     "/project2/lgrandi/": "/project2/lgrandi/yuanlq/shared/disk_usage/",
@@ -90,7 +90,7 @@ class Submit(object):
             delete_file=True,
             dry_run=False,
             mem_per_cpu=MEM[loop_item],
-            exclude_nodes='midway2-0020', # for test
+            #exclude_nodes='midway2-0020', # for test
             #exclude_nodes='dali0{28..29}',
             container="xenonnt-development.simg",
             cpus_per_task=1,

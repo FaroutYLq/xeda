@@ -7,6 +7,8 @@ Job submission wrappers for `xeda`.
 - `batch_job.py`: Batch job submitter for disk scanning.
 - `batch_job_tar.py`: Batch job submitter for file archiving.
 - `batch_job_rules.py`: Batch job submitter for rucio rule scanning.
+- `batch_job_reprocessed_peaks.py`: Batch job submitter for `peaks` loading test, in case of data corruption.
+- `build_peaks.py`: Job file for `peaks` loading test.
 - `submit_xeda_dali.sh`: Submit disk scanning job for `dali`.
 - `submit_xeda_midway2.sh`: Submit disk scanning job for `midway2`.
 - `submit_xeda_midway3.sh`: Submit disk scanning job for `midway3`.
