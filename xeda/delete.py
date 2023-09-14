@@ -1,3 +1,5 @@
+# This script somehow only works well on the old OSG login nodes...
+
 import csv
 from rucio.client.client import Client
 from rucio.client.client import ReplicaClient
