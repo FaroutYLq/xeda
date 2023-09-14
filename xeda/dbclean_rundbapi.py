@@ -44,7 +44,7 @@ def remove_data_entries(runsDB_API, dids_to_delete, rse, dry=False):
             else:
                 # This is EXTREMELLY DANGEROUS!!!
                 runsDB_API.delete_data(runid, d_to_delete)
-                time.sleep(2)
+                time.sleep(0.5)
                 
 
     print('-------')
@@ -62,4 +62,4 @@ if __name__ == '__main__':
     remove_data_entries(runsDB_API, 
                         dids_to_delete, 
                         rse=rse, 
-                        dry=True)
+                        dry=False)
