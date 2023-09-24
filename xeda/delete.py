@@ -1,3 +1,5 @@
+# This script somehow only works well on the old OSG login nodes...
+
 import csv
 from rucio.client.client import Client
 from rucio.client.client import ReplicaClient
@@ -59,8 +61,11 @@ for did in tqdm(dids_to_remove):
             rule_to_delete_exists = True
             nfiles_to_delete = rule['locks_ok_cnt']
             rule_to_delete_id = rule['id']
-            print('  Checking {0} which is equal to {1}'.format(rule['rse_expression'],rse))
+            #print('  Checking {0} which is equal to {1}'.format(rule['rse_expression'],rse))
 
+    if not rule_to_delete_exists:
+        print("Cannot find rule to delete for dataset {0} in {1}".format(did,rse))
+        continue
 
     for rule in rules:
         if rule['rse_expression']!=rse:
@@ -72,10 +77,10 @@ for did in tqdm(dids_to_remove):
             # reading physical presence of all files
             file_did = {'scope': scope, 'name': name}
             replicas = list(r.list_replicas([file_did],rse_expression=rule['rse_expression']))
-            print('  Checking {0} which is different from {1}'.format(rule['rse_expression'],rse))
+            #print('  Checking {0} which is different from {1}'.format(rule['rse_expression'],rse))
             #print(replicas)
             for file in replicas:
-                print('    Checking file ',file['rses'][rule['rse_expression']][0])
+                #print('    Checking file ',file['rses'][rule['rse_expression']][0])
                 gfal_filename = file['rses'][rule['rse_expression']][0]
                 try:
                     gfal_filestat = ctx.lstat(gfal_filename)
@@ -99,39 +104,42 @@ for did in tqdm(dids_to_remove):
         errfile.close()
     else:
         print("  Deleting {0} in {1}: {2}".format(did,rse,rule_to_delete_id))
-        c.update_replication_rule(rule_to_delete_id, {'account' : 'production'})
-        c.delete_replication_rule(rule_to_delete_id, purge_replicas=True)
+        try:
+            c.update_replication_rule(rule_to_delete_id, {'account' : 'production'})
+            c.delete_replication_rule(rule_to_delete_id, purge_replicas=True)
+        except:
+            print("The rule id %s does not exist?"%(rule_to_delete_id))
 
-        hash = did.split('-')[-1]
-        dtype = did.split('-')[0].split(':')[-1]
-        number = int(did.split(':')[0].split('_')[-1])
+        #hash = did.split('-')[-1]
+        #dtype = did.split('-')[0].split(':')[-1]
+        #number = int(did.split(':')[0].split('_')[-1])
 
-        print("  Deleting the db entry {0} of the rse {1}".format(did,rse))
-        print("  Run number: {0}".format(number))
-        print("  Data type: {0}".format(dtype))
-        print("  Hash: {0}".format(hash))
+        #print("  Deleting the db entry {0} of the rse {1}".format(did,rse))
+        #print("  Run number: {0}".format(number))
+        #print("  Data type: {0}".format(dtype))
+        #print("  Hash: {0}".format(hash))
 
-        run = db.find_one({'number' : number})
+        #run = db.find_one({'number' : number})
 
         #Checks if the datum exists in the DB
-        datum = None
-        for d in run['data']:
-            if d['type'] == dtype and d['host'] == 'rucio-catalogue' and d['location'] == rse:
-                datum = d
-                break
-            
+        #datum = None
+        #for d in run['data']:
+        #    if d['type'] == dtype and d['host'] == 'rucio-catalogue' and d['location'] == rse:
+        #        datum = d
+        #        break
+          
         #Delete the datum
-        if datum is not None:
-            RemoveDatafield(db, run['_id'],datum)
-            print(datum)
-            print("Datum deleted in DB.")
-        else:
-            print('There is no datum to delete')
+        #if datum is not None:
+            #RemoveDatafield(db, run['_id'],datum)
+            #print(datum)
+            #print("Datum deleted in DB.")
+        #else:
+            #print('There is no datum to delete')
 
 
 
         
 
-    time.sleep(30)
+    time.sleep(15)
 
 #    print(replicas)
