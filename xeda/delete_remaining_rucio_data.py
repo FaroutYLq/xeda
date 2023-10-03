@@ -1,4 +1,5 @@
 # this script is to manually delete the trash rucio leftover after deleting rules
+# Only use this after cleaning rucio+DB!!
 import numpy as np
 import subprocess
 import sys
