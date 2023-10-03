@@ -2,13 +2,14 @@
 import numpy as np
 import subprocess
 import sys
+from tqdm import tqdm
 
 _, did_npy_path, rucio_dir = sys.argv
 assert rucio_dir[-1] == '/'
 dids = np.load(did_npy_path)
 failed = []
 
-for did in dids:
+for did in tqdm(dids):
     print('-----')
     print(did)
     scope, name = did.split(':')
