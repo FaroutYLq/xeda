@@ -43,9 +43,21 @@ def remove_data_entries(runsDB_API, dids_to_delete, rse, dry=False):
                 print(d_to_delete)
             else:
                 # This is EXTREMELLY DANGEROUS!!!
-                runsDB_API.delete_data(runid, d_to_delete)
-                time.sleep(0.5)
-                
+                try:
+                    print(d_to_delete)
+                    runsDB_API.delete_data(runid, d_to_delete)
+                    time.sleep(0.5)
+                except:
+                    try:
+                        print("Failed deletion using 6-fig runid, trying 5-fig runid...")
+                        runsDB_API.delete_data(str(int(runid)), d_to_delete)
+                    except:
+                        print('Failed again to delete did %s at %s in document!'%(did, rse))
+                        print('Skipping...')
+                        print('Error message:')
+                        print(sys.exc_info()[0])
+                        bad_attempts.append(did)
+                    
 
     print('-------')
     print('SUMMARY')
