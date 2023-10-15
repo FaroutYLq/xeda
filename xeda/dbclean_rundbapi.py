@@ -7,7 +7,8 @@ import time
 import os
 import sys
 
-_, did_npy_path, rse = sys.argv
+_, did_npy_path = sys.argv
+# the datatype is like [('dataset_did','O'),('rse', 'O')]
 dids_to_delete = np.load(did_npy_path)
 
 os.environ['XENON_CONFIG']='/home/yuanlq/.xenon_config'
@@ -16,11 +17,13 @@ os.environ['X509_USER_PROXY']='/home/yuanlq/user_cert'
 
 runsDB_API = DB()
 
-def remove_data_entries(runsDB_API, dids_to_delete, rse, dry=False):
+def remove_data_entries(runsDB_API, dids_to_delete, dry=False):
     bad_attempts = []
     
     print("Want to delete %s data entries"%(len(dids_to_delete)))
-    for did in tqdm(dids_to_delete):
+    for did_info in tqdm(dids_to_delete):
+        rse = did_info['rse']
+        did = did_info['dataset_did']
         runid = did.split(':')[0].split('_')[-1]
         all_data = runsDB_API.get_data(runid)
 
@@ -73,5 +76,4 @@ def remove_data_entries(runsDB_API, dids_to_delete, rse, dry=False):
 if __name__ == '__main__':
     remove_data_entries(runsDB_API, 
                         dids_to_delete, 
-                        rse=rse, 
                         dry=False)
