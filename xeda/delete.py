@@ -13,11 +13,14 @@ import numpy as np
 import datetime
 import sys
 
+
 _, did_npy_path = sys.argv
+
 
 np_load_old = np.load
 np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
 
+# the datatype is like [('dataset_did','O'),('rse', 'O')]
 dids_to_remove = np.load(did_npy_path)
 print("datasets to remove: ",len(dids_to_remove))
 
