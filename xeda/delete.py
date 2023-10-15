@@ -13,7 +13,7 @@ import numpy as np
 import datetime
 import sys
 
-_, did_npy_path, rse  = sys.argv
+_, did_npy_path = sys.argv
 
 np_load_old = np.load
 np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
@@ -42,7 +42,9 @@ db = xent_collection()
 # 0 means doesn't require replica. 1 means requires one replica.
 rse_redundancy = 0
 
-for did in tqdm(dids_to_remove):
+for did_info in tqdm(dids_to_remove):
+    did = did_info['dataset_did']
+    rse = did_info['rse']
 
     print("Checking DID {0} in RSE {1}".format(did,rse))
     scope = did.split(":")[0]
@@ -140,6 +142,6 @@ for did in tqdm(dids_to_remove):
 
         
 
-    time.sleep(15)
+    time.sleep(5)
 
 #    print(replicas)
