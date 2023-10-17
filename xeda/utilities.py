@@ -10,7 +10,7 @@ MAX_RUN_NUMBER = COLL.count_documents({})
 SR0_RIGHT = 34731
 SR0_LEFT  = 17918
 SR1_LEFT  = 43039
-SR1_RIGHT = MAX_RUN_NUMBER
+SR1_RIGHT = 53506
 
 PEAKS_DTYPES = ['peaklets', 'merged_s2s', 'lone_hits', 'hitlets_nv']
 TAGS = ['bad', 'messy', 'hot_spot', 'ramp_down', 'ramp_up', 'pmt_trip', 
