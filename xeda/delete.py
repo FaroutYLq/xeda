@@ -13,11 +13,14 @@ import numpy as np
 import datetime
 import sys
 
-_, did_npy_path, rse  = sys.argv
+
+_, did_npy_path = sys.argv
+
 
 np_load_old = np.load
 np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
 
+# the datatype is like [('dataset_did','O'),('rse', 'O')]
 dids_to_remove = np.load(did_npy_path)
 print("datasets to remove: ",len(dids_to_remove))
 
@@ -42,7 +45,9 @@ db = xent_collection()
 # 0 means doesn't require replica. 1 means requires one replica.
 rse_redundancy = 0
 
-for did in tqdm(dids_to_remove):
+for did_info in tqdm(dids_to_remove):
+    did = did_info['dataset_did']
+    rse = did_info['rse']
 
     print("Checking DID {0} in RSE {1}".format(did,rse))
     scope = did.split(":")[0]
@@ -107,6 +112,7 @@ for did in tqdm(dids_to_remove):
         try:
             c.update_replication_rule(rule_to_delete_id, {'account' : 'production'})
             c.delete_replication_rule(rule_to_delete_id, purge_replicas=True)
+            time.sleep(90)
         except:
             print("The rule id %s does not exist?"%(rule_to_delete_id))
 
@@ -138,8 +144,5 @@ for did in tqdm(dids_to_remove):
 
 
 
-        
-
-    time.sleep(15)
 
 #    print(replicas)
