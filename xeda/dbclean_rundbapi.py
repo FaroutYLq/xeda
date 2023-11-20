@@ -7,7 +7,7 @@ import time
 import os
 import sys
 
-_, did_npy_path, rse = sys.argv
+_, did_npy_path = sys.argv
 dids_to_delete = np.load(did_npy_path, allow_pickle=True)
 
 os.environ['XENON_CONFIG']='/home/yuanlq/.xenon_config'
@@ -20,7 +20,10 @@ def remove_data_entries(runsDB_API, dids_to_delete, dry=False):
     bad_attempts = []
     
     print("Want to delete %s data entries"%(len(dids_to_delete)))
-    for did in tqdm(dids_to_delete):
+    for rule_info in tqdm(dids_to_delete):
+        did = rule_info['dataset_did']
+        rse = rule_info['rse']
+        
         runid = did.split(':')[0].split('_')[-1]
         all_data = runsDB_API.get_data(runid)
 
