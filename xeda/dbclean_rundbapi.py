@@ -8,7 +8,7 @@ import os
 import sys
 
 _, did_npy_path = sys.argv
-dids_to_delete = np.load(did_npy_path)
+dids_to_delete = np.load(did_npy_path, allow_pickle=True)
 
 os.environ['XENON_CONFIG']='/home/yuanlq/.xenon_config'
 os.environ['RUCIO_ACCOUNT']='production'
