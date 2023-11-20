@@ -7,7 +7,7 @@ import time
 import os
 import sys
 
-_, did_npy_path = sys.argv
+_, did_npy_path, rse = sys.argv
 dids_to_delete = np.load(did_npy_path, allow_pickle=True)
 
 os.environ['XENON_CONFIG']='/home/yuanlq/.xenon_config'
@@ -27,7 +27,7 @@ def remove_data_entries(runsDB_API, dids_to_delete, dry=False):
         found_entry = False
         for d in all_data:
             if ('location' in d.keys()) and ('did' in d.keys()):
-                if d['did'] == did:
+                if d['did'] == did and d['location'] == rse:
                     d_to_delete = d
                     found_entry = True
                     break
