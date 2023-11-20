@@ -112,7 +112,7 @@ for did_info in tqdm(dids_to_remove):
         try:
             c.update_replication_rule(rule_to_delete_id, {'account' : 'production'})
             c.delete_replication_rule(rule_to_delete_id, purge_replicas=True)
-            time.sleep(120)
+            time.sleep(30)
         except:
             print("The rule id %s does not exist?"%(rule_to_delete_id))
 
