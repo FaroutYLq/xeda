@@ -19,10 +19,18 @@ runsDB_API = DB()
 def remove_data_entries(runsDB_API, dids_to_delete, dry=False):
     bad_attempts = []
     
+    if len(dids_to_delete.dtype) == 0:
+        all_sites = True
+    else:
+        all_sites = False
+    
     print("Want to delete %s data entries"%(len(dids_to_delete)))
     for rule_info in tqdm(dids_to_delete):
-        did = rule_info['dataset_did']
-        rse = rule_info['rse']
+        if not all_sites:
+            did = rule_info['dataset_did']
+            rse = rule_info['rse']
+        else:
+            did = rule_info
         
         runid = did.split(':')[0].split('_')[-1]
         all_data = runsDB_API.get_data(runid)
@@ -30,10 +38,16 @@ def remove_data_entries(runsDB_API, dids_to_delete, dry=False):
         found_entry = False
         for d in all_data:
             if ('location' in d.keys()) and ('did' in d.keys()):
-                if d['did'] == did and d['location'] == rse:
-                    d_to_delete = d
-                    found_entry = True
-                    break
+                if all_sites:
+                    if d['did'] == did:
+                        d_to_delete = d
+                        found_entry = True
+                        break
+                else:
+                    if d['did'] == did and d['location'] == rse:
+                        d_to_delete = d
+                        found_entry = True
+                        break
         if not found_entry:
             print('Cannot find did %s in document!'%(did))
             print('Skipping...')
