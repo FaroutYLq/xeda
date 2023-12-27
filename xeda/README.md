@@ -14,6 +14,8 @@ Core functions for `xeda`.
 - `tar_and_split.py`: tar and split a folder for archiving. Check `../jobs` folder for usage.
 - `xeda.py`: core for disk usage scanning. Check `../README.md` and `../jobs` for usage.
 - `utilities.py`: useful functions for analyzing rucio scan results.
+- `add_rule.sh`: when you want to add a replica in rucio, use this script. Hardcode to config.
+- `add_rundb_entry.py`: Usually run after `add_rule.sh`. Synchronization between rucio and rundb for a certain runlist (passed by arguments).
 
 ## Usage
 It is not recommended to run them individually. You can find more information on usage in the `README.md` of the parent folder, and in `jobs` folder. 
