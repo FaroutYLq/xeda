@@ -63,10 +63,10 @@ class Submit(object):
             log='/home/%s/.tmp_job_submission/find_rules_%s_%s.log'%(USER, 
                                                                      datetime.now().strftime('%Y%m%d'), 
                                                                      job_i), 
-            partition='lgrandi', qos='lgrandi',
+            partition='caslake', qos='caslake',
             account='pi-lgrandi', jobname=jobname,
             delete_file=True, dry_run=False, mem_per_cpu=5000,
-            container='xenonnt-development.simg',
+            container='xenonnt-2023.11.1.simg',
             cpus_per_task=1)
 
 p = Submit()
