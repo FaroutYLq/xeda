@@ -60,7 +60,7 @@ class Submit(object):
         # Modify here for the log name
         utilix.batchq.submit_job(
             jobstring, 
-            log='/home/%s/.tmp_job_submission/find_rules_%s_%s.log'%(USER, 
+            log='/home/%s/.tmp_job_submission/find_rules/find_rules_%s_%s.log'%(USER, 
                                                                      datetime.now().strftime('%Y%m%d'), 
                                                                      job_i), 
             partition='caslake', qos='caslake',
