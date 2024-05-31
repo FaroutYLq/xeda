@@ -59,11 +59,11 @@ class Submit(object):
 
         # Modify here for the log name
         utilix.batchq.submit_job(
-            jobstring, 
-            log='/home/%s/.tmp_job_submission/find_rules/find_rules_%s_%s.log'%(USER, 
+            jobstring=jobstring, 
+            log='/home/%s/.tmp_job_submission/find_rules/find_rules_%s_%s.log'%(USER,
                                                                      datetime.now().strftime('%Y%m%d'), 
                                                                      job_i), 
-            partition='caslake', qos='caslake',
+            partition='xenon1t', qos='xenon1t',
             account='pi-lgrandi', jobname=jobname,
             delete_file=True, dry_run=False, mem_per_cpu=5000,
             container='xenonnt-2023.11.1.simg',
