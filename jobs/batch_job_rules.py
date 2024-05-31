@@ -65,7 +65,7 @@ class Submit(object):
                                                                      job_i), 
             partition='xenon1t', qos='xenon1t',
             account='pi-lgrandi', jobname=jobname,
-            delete_file=True, dry_run=False, mem_per_cpu=5000,
+            dry_run=False, mem_per_cpu=5000,
             container='xenonnt-2023.11.1.simg',
             cpus_per_task=1)
 
@@ -74,6 +74,6 @@ p = Submit()
 # Modify here for the runs
 loop_over = np.arange(N_JOBS)
 print('Batch of runs to process: ', len(loop_over))
-p.execute(loop_over=loop_over, max_num_submit=N_JOBS+1, nmax=10000)
+p.execute(loop_over=loop_over, max_num_submit=2000, nmax=10000)
 
 print("Find your outputs at %s"%OUTPUT_PATH)
