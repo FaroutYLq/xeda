@@ -83,6 +83,7 @@ def find_rules_info(dataset_dids):
         (('Stored in rse SDSC_USERDISK', 'SDSC_USERDISK'), np.bool),
         (('Stored in rse SDSC_NSDF_USERDISK', 'SDSC_NSDF_USERDISK'), np.bool),
         (('Stored in rse SURFSARA_USERDISK', 'SURFSARA_USERDISK'), np.bool),
+        (('Stored in rse SURFSARA2_USERDISK', 'SURFSARA2_USERDISK'), np.bool),
         (('Stored in rse UC_DALI_USERDISK', 'UC_DALI_USERDISK'), np.bool),
         (('Stored in rse UC_MIDWAY_USERDISK', 'UC_MIDWAY_USERDISK'), np.bool),
         (('Stored in rse UC_OSG_USERDISK', 'UC_OSG_USERDISK'), np.bool),
