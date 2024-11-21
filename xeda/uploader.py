@@ -122,6 +122,8 @@ def uploader():
                 print(f"Failed to upload {data_name}: {e}")
                 with open(failed_output_file, "a") as f:
                     f.write(data_name + "\n")
+                    f.write(str(e) + "\n")
+                    f.write("\n")
         
 
 if __name__ == "__main__":
