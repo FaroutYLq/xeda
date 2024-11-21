@@ -17,6 +17,7 @@ from functools import wraps
 import admix
 import sys
 from rucio.common.exception import DataIdentifierNotFound
+from datetime import timezone
 from datetime import datetime
 
 DATA_FOLDER = "/dali/lgrandi/xenonnt/processed/"
@@ -107,7 +108,7 @@ def uploader():
         except DataIdentifierNotFound as e:
             print(f"Data identifier not found: {did}, and we can upload this")
             try:
-                dtnow = datetime.utcnow().isoformat()
+                dtnow = datetime.now(timezone.utc).isoformat()
                 misc = {"creation_time": dtnow}
                 admix.upload(
                     os.path.join(DATA_FOLDER, data_name), 
