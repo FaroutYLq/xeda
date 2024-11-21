@@ -19,9 +19,13 @@ import sys
 from rucio.common.exception import DataIdentifierNotFound
 from datetime import timezone
 from datetime import datetime
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 DATA_FOLDER = "/dali/lgrandi/xenonnt/processed/"
 DESTINATION = "UC_DALI_USERDISK"
+REGISTER_AFTER_UPLOAD = True
 UPDATE_DB = True
 INTERVAL = 10 # seconds
 
@@ -113,7 +117,8 @@ def uploader():
                 admix.upload(
                     os.path.join(DATA_FOLDER, data_name), 
                     update_db=UPDATE_DB,
-                    rse=DESTINATION, did=did, miscellaneous=misc
+                    rse=DESTINATION, did=did, miscellaneous=misc,
+                    register_after_upload=REGISTER_AFTER_UPLOAD
                 )
                 # 3.1. If upload succeeds, record the uploaded dataname into the success log.
                 # TODO: This is not necessarily successful, because when upload fails 
