@@ -112,7 +112,7 @@ def uploader():
                 admix.upload(
                     os.path.join(DATA_FOLDER, data_name), 
                     update_db=UPDATE_DB,
-                    rse=RSE, did=did, miscellaneous=misc
+                    rse=DESTINATION, did=did, miscellaneous=misc
                 )
                 # 3.1. If upload succeeds, record the uploaded dataname into the success log.
                 with open(succeeded_output_file, "a") as f:
