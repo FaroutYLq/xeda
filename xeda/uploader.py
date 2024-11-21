@@ -116,6 +116,8 @@ def uploader():
                     rse=DESTINATION, did=did, miscellaneous=misc
                 )
                 # 3.1. If upload succeeds, record the uploaded dataname into the success log.
+                # TODO: This is not necessarily successful, because when upload fails 
+                # the exception is not caught here.
                 with open(succeeded_output_file, "a") as f:
                     f.write(data_name + "\n")
             except Exception as e:
