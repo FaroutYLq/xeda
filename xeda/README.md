@@ -16,6 +16,7 @@ Core functions for `xeda`.
 - `utilities.py`: useful functions for analyzing rucio scan results.
 - `add_rule.sh`: when you want to add a replica in rucio, use this script. Hardcode to config.
 - `add_rundb_entry.py`: Usually run after `add_rule.sh`. Synchronization between rucio and rundb for a certain runlist (passed by arguments).
+- `uploader.py`: A wrapper around `admix.upload` to push out-of-rucio data into rucio.
 
 ## Usage
 It is not recommended to run them individually. You can find more information on usage in the `README.md` of the parent folder, and in `jobs` folder. 
