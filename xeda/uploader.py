@@ -24,6 +24,16 @@ DESTINATION = "UC_DALI_USERDISK"
 UPDATE_DB = True
 INTERVAL = 10 # seconds
 
+# 1. Read the data names from the input directory.
+_, data_name_npy_path = sys.argv
+list_name = os.path.basename(data_name_npy_path).split('.')[0]
+folder_name = os.path.dirname(data_name_npy_path)
+monitor_output_file = os.path.join(folder_name, f"{list_name}_monitor.npy")
+succeeded_output_file = os.path.join(folder_name, f"{list_name}_succeeded.txt")
+failed_output_file = os.path.join(folder_name, f"{list_name}_failed.txt")
+existed_output_file = os.path.join(folder_name, f"{list_name}_existed.txt")
+data_names = np.load(data_name_npy_path)
+
 # A decorator that record the resources usage of the function.
 def monitor_usage(output_file, interval=INTERVAL):
     """
@@ -77,19 +87,10 @@ def monitor_function_during_run(output_file, interval=INTERVAL):
         return wrapper
     return decorator
 
-# 1. Read the data names from the input directory.
-_, data_name_npy_path = sys.argv
-list_name = os.path.basename(data_name_npy_path).split('.')[0]
-monitor_output_file = f"{list_name}_monitor.npy"
-succeeded_output_file = f"{list_name}_succeeded.txt"
-failed_output_file = f"{list_name}_failed.txt"
-existed_output_file = f"{list_name}_existed.txt"
-data_names = np.load(data_name_npy_path)
-
 @monitor_function_during_run(monitor_output_file)
 def uploader():
     admix.clients._init_clients()
-    
+
     # 2. Check if the rule exists in rucio.
     for data_name in data_names:
         # Make did
