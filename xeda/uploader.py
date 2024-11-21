@@ -114,6 +114,10 @@ def uploader():
             try:
                 dtnow = datetime.now(timezone.utc).isoformat()
                 misc = {"creation_time": dtnow}
+                admix.preupload(
+                    os.path.join(DATA_FOLDER, data_name), 
+                    rse=DESTINATION, did=did
+                )
                 admix.upload(
                     os.path.join(DATA_FOLDER, data_name), 
                     update_db=UPDATE_DB,
