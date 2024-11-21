@@ -19,7 +19,6 @@ import sys
 from rucio.common.exception import DataIdentifierNotFound
 from datetime import datetime
 
-admix.clients._init_clients()
 DATA_FOLDER = "/dali/lgrandi/xenonnt/processed/"
 DESTINATION = "UC_DALI_USERDISK"
 UPDATE_DB = True
@@ -89,6 +88,8 @@ data_names = np.load(data_name_npy_path)
 
 @monitor_function_during_run(monitor_output_file)
 def uploader():
+    admix.clients._init_clients()
+    
     # 2. Check if the rule exists in rucio.
     for data_name in data_names:
         # Make did
@@ -124,4 +125,3 @@ def uploader():
 
 if __name__ == "__main__":
     uploader()
-    
